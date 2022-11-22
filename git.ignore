@@ -1,0 +1,9 @@
+/cmake-build*/
+/.idea/
+/.vs/
+/out/build/
+/.vscode/
+/.PVS-Studio/
+/*build*/
+*kdev*
+/.cache/
