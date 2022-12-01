@@ -9,12 +9,11 @@ Server * Server :: _instance = nullptr;
 
 Server :: Server () {
 
-    _server_info.sin_family = AF_INET;
-    _server_info.sin_addr.s_addr = htonl ( INADDR_ANY );
-    _server_info.sin_port = htons ( __PORT );
+    this->_server_info.sin_family = AF_INET;
+    this->_server_info.sin_addr.s_addr = htonl ( INADDR_ANY );
+    this->_server_info.sin_port = htons ( __PORT );
 
-    _p_thread_list = new std :: list < Thread * > ();
-    _p_user_map    = new std :: map < int, pthread_t > ();
+    pthread_mutex_init ( & this->_threadListLock, nullptr );
 }
 
 
@@ -56,7 +55,7 @@ auto Server :: initialize_server () -> bool {
 
 auto Server :: get_client () const -> int {
 
-    sockaddr_in client_address;
+    sockaddr_in client_address { };
     socklen_t  client_address_size = sizeof ( client_address );
     int client_fd;
 
@@ -69,10 +68,42 @@ auto Server :: get_client () const -> int {
 }
 
 
-auto Server :: create_thread ( int * clientFd ) -> Thread * {
+auto Server :: create_thread ( int * clientFd ) -> bool {
 
-    auto newThread = new Thread ( & this->_threadId [ this->_threadCount ++ ], clientFd );
-    _p_thread_list->push_back ( newThread );
+
+    pthread_t newThread;
+
+    bool returnStatus = launch_new_thread ( & newThread, clientFd );
+    if ( ! returnStatus ) {
+        Server :: server_error( * clientFd, "Internal server error, try again later" );
+
+    }
+
+    pthread_mutex_lock ( & this->_threadListLock );
+
+    this->_threadList.push_back ( newThread );
+
+    pthread_mutex_unlock ( & this->_threadListLock );
+
+    return returnStatus;
+}
+
+
+auto Server :: server_error ( int clientFd, std :: string const & error ) -> void {
+
+    auto bufferSize = error.size();
+    write ( clientFd, & bufferSize, sizeof ( bufferSize ) );
+    write ( clientFd, error.c_str(), __STANDARD_BUFFER_SIZE );
+    close ( clientFd );
+}
+
+auto Server :: disconnect_client ( pthread_t threadId ) -> void {
+
+    pthread_mutex_lock ( & this->_threadListLock );
+
+    this->_threadList.remove ( threadId );
+
+    pthread_mutex_unlock ( & this->_threadListLock );
 }
 
 #endif //CONCURRENT_SV_SERVER_IMPL_HPP

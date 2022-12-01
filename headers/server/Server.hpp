@@ -6,37 +6,26 @@
 #define CONCURRENT_SV_SERVER_HPP
 
 #include <list>
-#include <map>
-#include <utility>
-#include "thread/Thread.hpp"
 
-#define __PORT 7000  /* NOLINT(bugprone-reserved-identifier) */
 
 #define __BACKLOG_SIZE 16    /* NOLINT(bugprone-reserved-identifier) */
 
-#define __MAX_USER_COUNT 1024   /* NOLINT(bugprone-reserved-identifier) */
 class Server {
 
 private:
     static Server * _instance;
 
 private:
-    sockaddr_in _server_info { 0 };
+    sockaddr_in _server_info { };
 
 private:
     int _socked_fd { 0 };
 
 private:
-    std :: list < Thread * > * _p_thread_list { nullptr };
+    std :: list < pthread_t > _threadList { };
 
 private:
-    pthread_t _threadId [ __MAX_USER_COUNT ]{};
-
-private:
-    uint8 _threadCount { 0 };
-
-private:
-    std :: map < int, pthread_t > * _p_user_map { nullptr };
+    pthread_mutex_t _threadListLock { };
 
 private:
     Server();
@@ -51,9 +40,16 @@ public:
     [[nodiscard]] auto get_client () const -> int;
 
 public:
-    auto create_thread ( int * clientFd ) -> Thread *;
+    [[nodiscard]] auto create_thread ( int * clientFd ) -> bool;
+
+private:
+    static auto server_error ( int clientFd, std :: string const & error ) -> void;
+
+public:
+    auto disconnect_client ( pthread_t threadId ) -> void;
 };
 
+#include "thread/ServerThread.hpp"
 #include "impl/Server.hpp"
 
 #endif //CONCURRENT_SV_SERVER_HPP

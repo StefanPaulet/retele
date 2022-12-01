@@ -19,6 +19,9 @@
 #include <unistd.h>
 #include <string>
 
+#define __PORT                 7000     /* NOLINT(bugprone-reserved-identifier) */
+#define __STANDARD_BUFFER_SIZE 256      /* NOLINT(bugprone-reserved-identifier) */
+
 typedef unsigned char      uint8;
 typedef unsigned short     uint16;
 typedef unsigned int       uint32;

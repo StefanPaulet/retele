@@ -12,7 +12,10 @@ set (
 
 include_directories  ( ${PROJ_INCLUDE_DIRECTORIES} )
 
+find_package ( Qt5Widgets REQUIRED )
 
 add_executable(server src/server.cpp)
 add_executable(client src/client.cpp)
 add_executable(main main.cpp)
+
+target_link_libraries ( main PRIVATE Qt5::Widgets )
