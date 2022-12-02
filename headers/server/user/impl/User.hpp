@@ -5,7 +5,7 @@
 #ifndef CONCURRENT_SV_USER_IMPL_HPP
 #define CONCURRENT_SV_USER_IMPL_HPP
 
-std :: shared_ptr < AtomicQueue > User :: pEventQueue = std :: make_shared < AtomicQueue > ();
+AtomicQueue * User :: pEventQueue = new AtomicQueue ();
 
 auto User :: send_msg ( std :: string const & message ) const -> void {
 
@@ -26,7 +26,6 @@ auto User :: handle_request () -> void {
             break;
         }
 
-        printf ( "Client request %d\n", request_nr );
 
         switch ( request_nr ) {
 
@@ -59,10 +58,10 @@ auto User :: handle_request () -> void {
                 clientConnected = false;
                 break;
             }
-//            case __TIMED_EVENTS_UPDATE : {
-//                this->send_msg ( "No event for you\n" );
-//                break;
-//            }
+            case __TIMED_EVENTS_UPDATE : {
+                this->handle_event_update();
+                break;
+            }
 //            case __TIMED_SPEED_LIMIT_UPDATE : {
 //                this->send_msg ( "You will get your speed limit soon\n" );
 //                break;
@@ -90,13 +89,25 @@ auto User :: handle_request () -> void {
 
 }
 
-auto User :: handle_signal () -> int {
+
+auto User :: handle_signal () -> void {
 
     char buffer [ __STANDARD_BUFFER_SIZE ];
 
     read ( this->_client_fd, buffer, __STANDARD_BUFFER_SIZE );
-    this->send_msg ( "Thank you for your signal" );
-    printf ("Thread %d signaled %s\n", this->_client_fd, buffer );
+    this->send_msg ( "Thank you for your signal\n" );
+
+    pEventQueue->push_back ( std :: string ( buffer ) );
+}
+
+
+auto User :: handle_event_update () -> void {
+
+    if ( this->_pLocalEventNode != pEventQueue->back() ) {
+        std :: string event = "Atentie " + this->_pLocalEventNode->_message + " pe ...\n";
+        this->send_msg ( event );
+        this->_pLocalEventNode = this->_pLocalEventNode->_pNext;
+    }
 }
 
 #endif //CONCURRENT_SV_USER_IMPL_HPP

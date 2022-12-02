@@ -13,7 +13,6 @@ int main () {
         exit ( EXIT_FAILURE );
     }
 
-    printf ( "Server successfully initialized\n" );
     while ( true ) {
 
         int * newClient = new int;
@@ -22,13 +21,10 @@ int main () {
             continue;
         }
 
-        printf ( "Client connected\n" );
 
         if ( ! server->create_thread ( newClient ) ) {
             perror ( "Internal error, client couldn't be served" );
             continue;
-        } else {
-            printf ( "Created thread\n" );
         }
     }
 

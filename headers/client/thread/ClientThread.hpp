@@ -17,12 +17,12 @@ namespace {
 
         int serverFd = * ( int * ) param;
 
-        uint32 bufferSize;
+        uint64 bufferSize;
         char buffer [ __STANDARD_BUFFER_SIZE ];
 
         while ( true ) {
 
-            if ( 0 >= read ( serverFd, & bufferSize, sizeof ( uint32 ) ) ) {
+            if ( 0 >= read ( serverFd, & bufferSize, sizeof ( bufferSize ) ) ) {
                 printf ( "Server connection dropped\n" );
                 break;
             }

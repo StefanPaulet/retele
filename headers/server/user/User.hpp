@@ -11,10 +11,10 @@
 class User {
 
 private:
-    static std :: shared_ptr < AtomicQueue > pEventQueue;
+    static AtomicQueue * pEventQueue;
 
 private:
-    std :: shared_ptr < AtomicQueue > _pLocalEventQueue;
+     AtomicQueue :: QueueNode _pLocalEventNode;
 
 private:
     int _client_fd;
@@ -22,13 +22,19 @@ private:
 public:
     explicit User ( int clientFd ) :
         _client_fd ( clientFd ),
-        _pLocalEventQueue ( pEventQueue ) {
+        _pLocalEventNode ( pEventQueue->back() ) {
+
+        printf ( "New thread %d acquired queue pointer with %ld owners and message %s",
+            this->_client_fd,
+            this->_pLocalEventNode.use_count(),
+            this->_pLocalEventNode.get()->_message.c_str()
+        );
 
     };
 
 public:
     ~User () {
-        this->_pLocalEventQueue.reset ();
+        this->_pLocalEventNode.reset ();
     }
 
 private:
@@ -38,7 +44,10 @@ public:
     auto handle_request () -> void;
 
 public:
-    auto handle_signal () -> int;
+    auto handle_signal () -> void;
+
+public:
+    auto handle_event_update () -> void;
 };
 
 #endif //CONCURRENT_SV_USER_HPP

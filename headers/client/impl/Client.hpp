@@ -75,18 +75,30 @@ auto Client :: client_main () const -> void {
     char buffer[__STANDARD_BUFFER_SIZE];
     char * p_aux;
 
+    auto split_param = [] ( char * initialBuffer, char * & parameters ) -> bool {
+
+        parameters = strchr ( initialBuffer, ' ' );
+        if ( parameters == nullptr ) {
+            return false;
+        }
+
+        * parameters = 0;
+        parameters ++;
+        return true;
+    };
+
     while ( true ) {
 
         fgets ( buffer, __STANDARD_BUFFER_SIZE, stdin );
-        p_aux = strtok ( buffer, " \n\t" );
+
+        buffer [ strlen ( buffer ) - 1 ] = 0;
+
+        bool hasParams = split_param ( buffer, p_aux );
 
         int request_code = _command_map.find( buffer )->second;
 
-        if ( request_code / 100 != 0 ) {
-            p_aux = strtok ( nullptr, " \n\t" );
-            if ( p_aux == nullptr ) {
-                request_code = __NO_PARAM_REQUEST;
-            }
+        if ( request_code / 100 != 0 && ! hasParams ) {
+            request_code = __BAD_REQUEST;
         }
 
         if ( -1 == write ( this->_server_fd, & request_code, sizeof ( int ) ) ) {
@@ -94,7 +106,7 @@ auto Client :: client_main () const -> void {
             exit ( EXIT_FAILURE );
         }
 
-        if ( request_code / 100 != 0 ) {
+        if ( request_code / 100 != 0 && hasParams ) {
             write ( this->_server_fd, p_aux, __STANDARD_BUFFER_SIZE );
         }
 

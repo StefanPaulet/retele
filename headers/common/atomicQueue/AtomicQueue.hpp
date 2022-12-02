@@ -6,58 +6,85 @@
 #define CONCURRENT_SV_ATOMIC_QUEUE_HPP
 
 #include <string>
-#include <atomic>
+#include <memory>
 
 class AtomicQueue {
 
 public:
-    struct QueueNode {
+    struct SharedNode {
 
-        std :: string _message;
-        QueueNode *        _pNext;
+        std :: string   _message;
+        std :: shared_ptr < SharedNode >     _pNext;
 
-        explicit QueueNode ( std :: string const & message ) :
+        SharedNode() :
+                _pNext ( nullptr ) {
+
+        }
+
+        explicit SharedNode ( std :: string const & message ) :
                 _message ( message ),
                 _pNext   ( nullptr ) {
 
         }
-        explicit QueueNode ( std :: string && message ) :
+        explicit SharedNode ( std :: string && message ) :
                 _message ( std :: move ( message ) ),
                 _pNext   ( nullptr ) {
 
         }
     };
 
-private:
-    std :: atomic < QueueNode * > _pFront;
+public:
+    using QueueNode = std :: shared_ptr < SharedNode >;
 
 private:
-    std :: atomic < QueueNode * > _pBack;
+    QueueNode _pFront;
+
+private:
+    QueueNode _pBack;
+
+private:
+    std :: mutex _queueLock;
 
 
 public:
     AtomicQueue () {
-        this->_pFront.store ( nullptr );
-        this->_pBack.store ( nullptr );
+        this->_pFront = this->_pBack = std :: make_shared < SharedNode > ();
+    }
+
+public:
+    auto back () -> QueueNode {
+
+        std :: lock_guard lock ( this->_queueLock );
+        return this->_pBack;
+    }
+
+public:
+    auto front () -> QueueNode {
+
+        return this->_pFront;
     }
 
 
 public:
-    auto back () -> QueueNode * {
-        return this->_pBack.load();
+    auto push_back ( std :: string && message ) {
+
+        std :: lock_guard lock ( this->_queueLock );
+
+        auto new_QueueNode = std::make_shared < SharedNode > ();
+
+        this->_pBack->_pNext = new_QueueNode;
+        this->_pBack->_message = message;
+        this->_pBack = new_QueueNode;
     }
 
 
 public:
-    auto push_back ( std :: string const & message ) {
+    auto pop_front () {
 
-        auto new_QueueNode = new QueueNode ( message );
-
-        new_QueueNode->_pNext = this->_pBack.load();
-
-        while ( ! this->_pBack.compare_exchange_strong ( new_QueueNode->_pNext, new_QueueNode ) );
+        auto oldFront = this->_pFront;
+        this->_pFront = this->_pFront->_pNext;
+        oldFront.reset();
     }
-
 };
 
 #endif //CONCURRENT_SV_ATOMIC_QUEUE_HPP

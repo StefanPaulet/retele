@@ -1,48 +1,61 @@
+#include <iostream>
 #include <atomic>
-template<typename T>
-struct node
-{
-    T data;
-    node* next;
-    node(const T& data) : data(data), next(nullptr) {}
-};
+#include <memory>
+class AtomicQueue {
 
-template<typename T>
-class stack
-{
-    std::atomic<node<T>*> head;
 public:
-    void push(const T& data)
-    {
-        node<T>* new_node = new node<T>(data);
+    struct QueueNode {
 
-        // put the current value of head into new_node->next
-        new_node->next = head.load(std::memory_order_relaxed);
+        std :: string                 _message;
+        std :: atomic < QueueNode * > _pNext;
 
-        // now make new_node the new head, but if the head
-        // is no longer what's stored in new_node->next
-        // (some other thread must have inserted a node just now)
-        // then put that new head into new_node->next and try again
-        while(!head.compare_exchange_weak(new_node->next, new_node,
-                                          std::memory_order_release,
-                                          std::memory_order_relaxed))
-            ; // the body of the loop is empty
+        explicit QueueNode ( std :: string const & message ) :
+                _message ( message ) {
 
-// Note: the above use is not thread-safe in at least
-// GCC prior to 4.8.3 (bug 60272), clang prior to 2014-05-05 (bug 18899)
-// MSVC prior to 2014-03-17 (bug 819819). The following is a workaround:
-//      node<T>* old_head = head.load(std::memory_order_relaxed);
-//      do {
-//          new_node->next = old_head;
-//       } while(!head.compare_exchange_weak(old_head, new_node,
-//                                           std::memory_order_release,
-//                                           std::memory_order_relaxed));
+        }
+        explicit QueueNode ( std :: string && message ) :
+                _message ( std :: move ( message ) ) {
+
+        }
+    };
+
+private:
+    std :: atomic < QueueNode * > _pFront;
+
+private:
+    std :: atomic < QueueNode * > _pBack;
+
+
+public:
+    auto back () -> QueueNode * {
+        return this->_pBack.load();
     }
+
+
+public:
+    auto push_back ( std :: string && message ) {
+
+        auto new_QueueNode = new QueueNode ( message );
+        auto oldBack = this->_pBack.load();
+        oldBack->_pNext.store ( new_QueueNode );
+        while ( this->_pBack.compare_exchange_strong (
+                oldBack,
+                new_QueueNode
+        )
+                );
+    }
+
 };
-int main()
-{
-    stack<int> s;
-    s.push(1);
-    s.push(2);
-    s.push(3);
+
+
+int main() {
+    AtomicQueue a;
+    a.push_back ( "abc" );
+    std :: cout << a.back() << '\n';
+    a.push_back ( "def" );
+    std :: cout << a.back() << '\n';
+    a.push_back ( "ghi" );
+    std :: cout << a.back() << '\n';
+    a.push_back ( "jkl" );
+    std :: cout << a.back() << '\n';
 }
