@@ -7,80 +7,57 @@
 
 #include "../../common/thread/ThreadCommons.hpp"
 
-enum ThreadActions {
-    _tf_clientReadingEndpoint, _tf_clientPinging
-};
+auto _client_reading_endpoint ( void * param ) -> void * {      /* NOLINT(bugprone-reserved-identifier) */
 
-namespace {
+    int serverFd = * ( int * ) param;
 
-    auto _client_reading_endpoint ( void * param ) -> void * {
+    uint64 bufferSize;
+    char buffer [ __STANDARD_BUFFER_SIZE ];
 
-        int serverFd = * ( int * ) param;
+    while ( true ) {
 
-        uint64 bufferSize;
-        char buffer [ __STANDARD_BUFFER_SIZE ];
-
-        while ( true ) {
-
-            if ( 0 >= read ( serverFd, & bufferSize, sizeof ( bufferSize ) ) ) {
-                printf ( "Server connection dropped\n" );
-                break;
-            }
-            if ( 0 >= read ( serverFd, buffer, bufferSize )) {
-                printf ( "Server connection dropped\n" );
-                break;
-            }
-            write ( 1, buffer, bufferSize );
+        if ( 0 >= read ( serverFd, & bufferSize, sizeof ( bufferSize ) ) ) {
+            printf ( "Server connection dropped\n" );
+            break;
         }
-
-        exit ( EXIT_FAILURE );
-
+        if ( 0 >= read ( serverFd, buffer, bufferSize )) {
+            printf ( "Server connection dropped\n" );
+            break;
+        }
+        write ( 1, buffer, bufferSize );
     }
 
-    auto _client_pinging ( void * param ) -> void * {
+    exit ( EXIT_FAILURE );
 
-        auto parameters = ( int * ) param;
-        int serverFd = parameters[ 0 ];
-        int requestType = parameters [ 1 ];
-        int frequency = parameters [ 2 ];
+}
 
-        while ( true ) {
+auto _client_pinging ( void * param ) -> void * {       /* NOLINT(bugprone-reserved-identifier) */
 
-            sleep ( frequency );
-            if ( 0 > write ( serverFd, & requestType, 4 ) ) {
-                break;
-            }
+    auto parameters = ( int * ) param;
+    int serverFd = parameters[ 0 ];
+    int requestType = parameters [ 1 ];
+    int frequency = parameters [ 2 ];
+
+    while ( true ) {
+
+        sleep ( frequency );
+        if ( 0 > write ( serverFd, & requestType, 4 ) ) {
+            break;
         }
-
-        pthread_cancel ( pthread_self() );
-
-        return nullptr;
     }
+
+    pthread_cancel ( pthread_self() );
+
+    return nullptr;
 }
 
 typedef void * ( * ThreadFunctionType ) ( void * );
 
 static auto launch_new_thread (
                  pthread_t * newThread,
-                 ThreadActions functionType,
+                 ThreadFunctionType threadMain,
                  int * threadParam
      ) -> bool {
-
-    ThreadFunctionType threadMain;
-    switch ( functionType ) {
-
-        case _tf_clientReadingEndpoint : {
-            threadMain = & _client_reading_endpoint;
-            break;
-        }
-        case _tf_clientPinging : {
-            threadMain = & _client_pinging;
-            break;
-        }
-        default : {
-            threadMain = nullptr;
-        }
-    }
 
     if ( 0 > pthread_create ( newThread, nullptr, threadMain, ( void * ) threadParam ) ) {
         perror ( "Thread creation error" );

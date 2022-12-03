@@ -22,6 +22,9 @@ private:
     int _socked_fd { 0 };
 
 private:
+    pthread_t _queueSupervisorId { };
+
+private:
     std :: list < pthread_t > _threadList { };
 
 private:

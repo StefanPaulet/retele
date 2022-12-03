@@ -49,7 +49,7 @@ auto Server :: initialize_server () -> bool {
         return false;
     }
 
-    return true;
+    return  launch_new_thread ( & this->_queueSupervisorId, & _queue_supervisor_main, nullptr );
 }
 
 
@@ -73,7 +73,7 @@ auto Server :: create_thread ( int * clientFd ) -> bool {
 
     pthread_t newThread;
 
-    bool returnStatus = launch_new_thread ( & newThread, clientFd );
+    bool returnStatus = launch_new_thread ( & newThread, & _server_main, clientFd );
     if ( ! returnStatus ) {
         Server :: server_error( * clientFd, "Internal server error, try again later" );
 

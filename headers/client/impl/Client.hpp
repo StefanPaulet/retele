@@ -41,7 +41,7 @@ auto Client :: initialize_connection () -> bool {
 
 auto Client :: initialize_writerThread () -> bool {
 
-    return launch_new_thread ( & _writerThread, ThreadActions :: _tf_clientReadingEndpoint, & _server_fd );
+    return launch_new_thread ( & _writerThread, & _client_reading_endpoint, & _server_fd );
 }
 
 auto Client :: initialize_pingingThreads () -> bool {
@@ -61,7 +61,7 @@ auto Client :: initialize_pingingThreads () -> bool {
         p_ping_param [ i ][ 1 ] = i + __TIMED_EVENTS_UPDATE;
 
         returnResult = returnResult &&
-                launch_new_thread (  & _pinging_thread[ i ], ThreadActions :: _tf_clientPinging, p_ping_param[ i ] );
+                launch_new_thread (  & _pinging_thread[ i ], & _client_pinging, p_ping_param[ i ] );
     }
 
     sleep ( 1 );

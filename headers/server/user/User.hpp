@@ -14,6 +14,9 @@ private:
     static AtomicQueue * pEventQueue;
 
 private:
+    friend auto _queue_supervisor_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
+
+private:
      AtomicQueue :: QueueNode _pLocalEventNode;
 
 private:
@@ -22,13 +25,7 @@ private:
 public:
     explicit User ( int clientFd ) :
         _client_fd ( clientFd ),
-        _pLocalEventNode ( pEventQueue->back() ) {
-
-        printf ( "New thread %d acquired queue pointer with %ld owners and message %s",
-            this->_client_fd,
-            this->_pLocalEventNode.use_count(),
-            this->_pLocalEventNode.get()->_message.c_str()
-        );
+        _pLocalEventNode ( pEventQueue->front() ) {
 
     };
 

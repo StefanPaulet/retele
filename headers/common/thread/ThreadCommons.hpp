@@ -2,8 +2,8 @@
 // Created by stefan on 24.11.2022.
 //
 
-#ifndef CONCURRENT_SV_THREAD_FUNCTIONS_HPP
-#define CONCURRENT_SV_THREAD_FUNCTIONS_HPP
+#ifndef CONCURRENT_SV_THREAD_COMMONS_HPP
+#define CONCURRENT_SV_THREAD_COMMONS_HPP
 
 /**
  * Bad request -> id <= 0
@@ -28,4 +28,4 @@ enum CommandIDs {
     __TIMED_SPEED_LIMIT_UPDATE    = 9       /* NOLINT(bugprone-reserved-identifier) */
 };
 
-#endif //CONCURRENT_SV_THREAD_FUNCTIONS_HPP
+#endif //CONCURRENT_SV_THREAD_COMMONS_HPP

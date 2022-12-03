@@ -10,11 +10,14 @@
 
 class AtomicQueue {
 
-public:
+private:
+    friend class User;
+
+private:
     struct SharedNode {
 
-        std :: string   _message;
-        std :: shared_ptr < SharedNode >     _pNext;
+        std :: string                    _message;
+        std :: shared_ptr < SharedNode > _pNext;
 
         SharedNode() :
                 _pNext ( nullptr ) {
@@ -33,17 +36,20 @@ public:
         }
     };
 
-public:
+private:
     using QueueNode = std :: shared_ptr < SharedNode >;
 
-private:
+public:
     QueueNode _pFront;
 
-private:
+public:
     QueueNode _pBack;
 
 private:
-    std :: mutex _queueLock;
+    std :: mutex _backLock;
+
+private:
+    std :: mutex _frontLock;
 
 
 public:
@@ -52,15 +58,16 @@ public:
     }
 
 public:
-    auto back () -> QueueNode {
+    auto back () -> QueueNode const & {
 
-        std :: lock_guard lock ( this->_queueLock );
+        std :: lock_guard lock ( this->_backLock );
         return this->_pBack;
     }
 
 public:
-    auto front () -> QueueNode {
+    auto front () -> QueueNode const & {
 
+        std :: lock_guard lock ( this->_frontLock );
         return this->_pFront;
     }
 
@@ -68,7 +75,7 @@ public:
 public:
     auto push_back ( std :: string && message ) {
 
-        std :: lock_guard lock ( this->_queueLock );
+        std :: lock_guard lock ( this->_backLock );
 
         auto new_QueueNode = std::make_shared < SharedNode > ();
 
@@ -80,6 +87,8 @@ public:
 
 public:
     auto pop_front () {
+
+        std :: lock_guard lock ( this->_frontLock );
 
         auto oldFront = this->_pFront;
         this->_pFront = this->_pFront->_pNext;
