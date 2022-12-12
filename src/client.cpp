@@ -17,7 +17,7 @@ int main () {
 
     printf ( "Connected to server\n" );
 
-    if ( ! client->initialize_writerThread() ) {
+    if ( ! client->initialize_consoleOutputThread() ) {
         perror ( "Thread creation error" );
         exit ( EXIT_FAILURE );
     }

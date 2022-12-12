@@ -15,4 +15,11 @@ constexpr auto Node :: isGasStation () const -> bool {
     return this->_gas_station;
 }
 
+inline auto Node :: addNeighbour (
+        Node * neighbour
+    ) -> void {
+
+    this->_pNeighbourList->push_back ( neighbour );
+}
+
 #endif //CONCURRENT_SV_NODE_IMPL_HPP

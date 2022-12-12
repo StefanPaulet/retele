@@ -5,7 +5,7 @@
 #ifndef CONCURRENT_SV_CLIENT_IMPL_HPP
 #define CONCURRENT_SV_CLIENT_IMPL_HPP
 
-
+/// Command map used to quickly find name -> command_nr association
 const std :: map < std :: string, int > Client :: _command_map = {
         { "signal",              __SIGNAL   },
         { "get-gas-price",       __GET_GP   },
@@ -14,6 +14,9 @@ const std :: map < std :: string, int > Client :: _command_map = {
         { "quit",                __EXIT }
 };
 
+/**
+ * Client constructor
+ */
 Client :: Client () {
 
     this->_server_info.sin_family = AF_INET;
@@ -21,7 +24,10 @@ Client :: Client () {
     this->_server_info.sin_addr.s_addr = inet_addr ( "127.0.0.1" );
 }
 
-
+/**
+ * Connection initializer
+ * @return bool = function success
+ */
 auto Client :: initialize_connection () -> bool {
 
     if ( -1 == ( this->_server_fd = socket ( AF_INET, SOCK_STREAM, 0 ) ) ) {
@@ -38,16 +44,30 @@ auto Client :: initialize_connection () -> bool {
 
 }
 
+/**
+ * Initializing thread that handles reads from server => output to console
+ * @return bool = function success
+ */
+auto Client :: initialize_consoleOutputThread () -> bool {
 
-auto Client :: initialize_writerThread () -> bool {
-
-    return launch_new_thread ( & _writerThread, & _client_reading_endpoint, & _server_fd );
+    return launch_new_thread ( & _writerThread, & _console_output_main, & _server_fd );
 }
 
+
+/**
+ * Initializing threads that send requests periodically
+ * @return bool = function success
+ */
 auto Client :: initialize_pingingThreads () -> bool {
 
     bool returnResult = true;
 
+
+    /*
+     * p_ping_param[i][0] = server file descriptor
+     * p_ping_param[i][1] = request to be sent
+     * p_ping_param[i][2] = frequency of sending
+     */
     int p_ping_param[5][3];
 
     p_ping_param [ 0 ][ 2 ] = 1;
@@ -61,7 +81,7 @@ auto Client :: initialize_pingingThreads () -> bool {
         p_ping_param [ i ][ 1 ] = i + __TIMED_EVENTS_UPDATE;
 
         returnResult = returnResult &&
-                launch_new_thread (  & _pinging_thread[ i ], & _client_pinging, p_ping_param[ i ] );
+                launch_new_thread (  & _pinging_threads[ i ], & _pinging_main, p_ping_param[ i ] );
     }
 
     sleep ( 1 );
@@ -70,6 +90,9 @@ auto Client :: initialize_pingingThreads () -> bool {
 }
 
 
+/**
+ * Main function of client; handles console reading => sending request to server
+ */
 auto Client :: client_main () const -> void {
 
     char buffer[__STANDARD_BUFFER_SIZE];
@@ -117,7 +140,7 @@ auto Client :: client_main () const -> void {
     }
 
     pthread_join ( this->_writerThread, nullptr );
-    for ( auto i : this->_pinging_thread ) {
+    for ( auto i : this->_pinging_threads ) {
         pthread_join ( i, nullptr );
     }
 }

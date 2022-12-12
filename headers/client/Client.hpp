@@ -22,7 +22,7 @@ private:
     pthread_t _writerThread { };
 
 private:
-    pthread_t _pinging_thread [ 3 ] { };
+    pthread_t _pinging_threads [ 3 ] { };
 
 private:
     static const std :: map < std :: string, int > _command_map;
@@ -37,7 +37,7 @@ public:
     [[nodiscard]] auto initialize_pingingThreads () -> bool;
 
 public:
-    [[nodiscard]] auto initialize_writerThread () -> bool;
+    [[nodiscard]] auto initialize_consoleOutputThread () -> bool;
 
 public:
     auto client_main () const -> void;

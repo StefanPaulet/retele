@@ -14,7 +14,7 @@ private:
     uint8 _id;
 
 private:
-    std :: pair < Node, Node > _endNodes;
+    std :: pair < Node const *, Node const * > _endNodes;
 
 private:
     uint8 _maxSpeed { 30 };
@@ -34,8 +34,8 @@ private:
 public:
     Edge (
             uint8 id,
-            Node const & firstEnd,
-            Node const & secondEnd,
+            Node const * firstEnd,
+            Node const * secondEnd,
             uint8 maxSpeed,
             uint8 length,
             std :: string && name

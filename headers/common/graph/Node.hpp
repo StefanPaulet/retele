@@ -5,6 +5,8 @@
 #ifndef CONCURRENT_SV_NODE_HPP
 #define CONCURRENT_SV_NODE_HPP
 
+#include <list>
+
 class Node {
 
 private:
@@ -13,14 +15,18 @@ private:
 private:
     bool _gas_station;
 
+private:
+    std :: list < Node * > * _pNeighbourList { nullptr };
+
 public:
-    constexpr Node (
+    explicit constexpr Node (
             uint8 id,
             bool gas_station = false
     ) :
         _id          ( id ),
         _gas_station ( gas_station ) {
 
+        this->_pNeighbourList = new std :: list < Node * >;
     }
 
 public:
@@ -28,6 +34,11 @@ public:
 
 public:
     [[nodiscard]] constexpr auto isGasStation () const -> bool;
+
+public:
+    auto addNeighbour (
+            Node * neighbour
+    ) -> void;
 };
 
 #endif //CONCURRENT_SV_NODE_HPP

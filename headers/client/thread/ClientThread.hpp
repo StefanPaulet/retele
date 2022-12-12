@@ -7,7 +7,7 @@
 
 #include "../../common/thread/ThreadCommons.hpp"
 
-auto _client_reading_endpoint ( void * param ) -> void * {      /* NOLINT(bugprone-reserved-identifier) */
+auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-reserved-identifier) */
 
     int serverFd = * ( int * ) param;
 
@@ -31,7 +31,7 @@ auto _client_reading_endpoint ( void * param ) -> void * {      /* NOLINT(bugpro
 
 }
 
-auto _client_pinging ( void * param ) -> void * {       /* NOLINT(bugprone-reserved-identifier) */
+auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserved-identifier) */
 
     auto parameters = ( int * ) param;
     int serverFd = parameters[ 0 ];
