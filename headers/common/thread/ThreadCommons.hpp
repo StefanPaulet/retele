@@ -12,7 +12,7 @@
  */
 
 enum CommandIDs {
-    __BAD_REQUEST      = 0,        /* NOLINT(bugprone-reserved-identifier) */
+    __BAD_REQUEST      = 0,         /* NOLINT(bugprone-reserved-identifier) */
     __NO_PARAM_REQUEST = -1,        /* NOLINT(bugprone-reserved-identifier) */
     __SIGNAL           = 101,       /* NOLINT(bugprone-reserved-identifier) */
     __GET_GP           = 2,         /* NOLINT(bugprone-reserved-identifier) */

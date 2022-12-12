@@ -1,0 +1,8 @@
+//
+// Created by stefan on 03.12.2022.
+//
+
+#ifndef CONCURRENT_SV_GRAPH_IMPL_HPP
+#define CONCURRENT_SV_GRAPH_IMPL_HPP
+
+#endif //CONCURRENT_SV_GRAPH_IMPL_HPP

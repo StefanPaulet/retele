@@ -53,7 +53,7 @@ private:
 
 
 public:
-    AtomicQueue () {
+    constexpr AtomicQueue () {
         this->_pFront = this->_pBack = std :: make_shared < SharedNode > ();
     }
 

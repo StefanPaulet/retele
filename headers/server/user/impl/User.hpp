@@ -104,7 +104,7 @@ auto User :: handle_signal () -> void {
 auto User :: handle_event_update () -> void {
 
     if ( this->_pLocalEventNode != pEventQueue->back() ) {
-        std :: string event = "Atentie " + this->_pLocalEventNode->_message + " pe ...\n";
+        std :: string event = "Attention " + this->_pLocalEventNode->_message + " on ...\n";
         this->send_msg ( event );
         this->_pLocalEventNode = this->_pLocalEventNode->_pNext;
     }

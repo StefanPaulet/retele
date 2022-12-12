@@ -1,19 +1,12 @@
 #include <iostream>
-#include <AtomicQueue>
+#include <cstring>
+#include <functional>
+int f ( int a, int b, int c ) { return a + b + c; }
+int f ( int a, int b ) { return a * b; }
 
 int main() {
-
-    AtomicQueue a;
-    a.push_back ( "abc" );
-    std :: cout << a.front()->_pNext.use_count() << '\n';
-    std :: cout << a.back().use_count() << '\n';
-    a.push_back ( "abc" );
-    std :: cout << a.front().use_count() << '\n';
-    std :: cout << a.back() << '\n';
-    a.push_back ( "def" );
-    std :: cout << a.back() << '\n';
-    a.push_back ( "ghi" );
-    std :: cout << a.back() << '\n';
-    a.push_back ( "jkl" );
-    std :: cout << a.back() << '\n';
+    std::function<int(int, int)> fn = static_cast < int ( * ) ( int, int ) > ( f );
+    std :: cout << fn ( 4, 5 ) << '\n';
+    std :: cout << f (2, 3, 4 ) << '\n';
+    std :: cout << f (2, 3 ) << '\n';
 }

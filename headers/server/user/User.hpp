@@ -7,6 +7,7 @@
 
 #include <AtomicQueue>
 #include <memory>
+#include "../../common/graph/Graph.hpp"
 
 class User {
 
@@ -46,5 +47,7 @@ public:
 public:
     auto handle_event_update () -> void;
 };
+
+#include "../../common/graph/impl/Graph.hpp"
 
 #endif //CONCURRENT_SV_USER_HPP

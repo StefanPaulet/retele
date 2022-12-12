@@ -32,7 +32,6 @@ auto _queue_supervisor_main ( void * param ) -> void * {
 
         sleep ( 2 );
     }
-    pthread_cancel ( pthread_self() );
 }
 
 
