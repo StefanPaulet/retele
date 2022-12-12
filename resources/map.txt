@@ -1,15 +1,15 @@
-9
+9 12
 2
-2 7
-1 2 30 5 "Strada Minervei"
-2 3 30 4 "Strada Minervei"
-4 5 30 6 "Strada Egalitatii"
-5 6 30 5 "Strada Egalitatii"
-7 8 30 8 "Strada Salciilor"
-8 9 30 4 "Strada Salciilor"
-1 4 50 7 "Strada Orientului"
-4 7 50 2 "Strada Orientului"
-2 5 60 9 "Strada Gheroghe Doja"
-5 8 60 5 "Strada Gheroghe Doja"
-3 6 90 3 "Strada Petre Tutea"
-6 9 90 15 "Strada Petre Tutea"
+1 6
+0 1 30 5 Strada Minervei
+1 2 30 4 Strada Minervei
+3 4 30 6 Strada Egalitatii
+4 5 30 5 Strada Egalitatii
+6 7 30 8 Strada Salciilor
+7 8 30 4 Strada Salciilor
+0 3 50 7 Strada Orientului
+3 6 50 2 Strada Orientului
+1 4 60 9 Strada Gheroghe Doja
+4 7 60 5 Strada Gheroghe Doja
+2 5 90 3 Strada Petre Tutea
+5 8 90 15 Strada Petre Tutea

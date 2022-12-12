@@ -24,6 +24,9 @@ public:
     }
 
 public:
+    auto setGasStation () -> void;
+
+public:
     [[nodiscard]] constexpr auto isGasStation () const -> bool;
 };
 

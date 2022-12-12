@@ -6,7 +6,7 @@
 #define CONCURRENT_SV_GRAPH_HPP
 
 #include "Edge.hpp"
-#include <vector>
+#include <fstream>
 
 class Graph {
 
@@ -14,9 +14,22 @@ private:
     uint16 _nodeCount;
 
 private:
-    std :: vector < Node > _nodeList;
+    uint16 _edgeCount;
 
 private:
+    Node * * _pNodeList;
+
+private:
+    Edge * * _pEdgeList;
+
+public:
+    Graph();
+
+public:
+    auto constexpr getStreet (
+            int const & streetId
+    ) -> Edge * ;
+
 };
 
 #include "impl/Edge.hpp"

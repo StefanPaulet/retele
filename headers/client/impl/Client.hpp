@@ -54,7 +54,7 @@ auto Client :: initialize_pingingThreads () -> bool {
     p_ping_param [ 1 ][ 2 ] = 10;
     p_ping_param [ 2 ][ 2 ] = 10;
     p_ping_param [ 3 ][ 2 ] = 60;
-    p_ping_param [ 4 ][ 2 ] = 1;
+    p_ping_param [ 4 ][ 2 ] = 5;
 
     for ( int i = 0; i < 5; ++ i ) {
         p_ping_param [ i ][ 0 ] = this->_server_fd;

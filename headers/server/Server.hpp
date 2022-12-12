@@ -6,6 +6,7 @@
 #define CONCURRENT_SV_SERVER_HPP
 
 #include <list>
+#include "../common/graph/Graph.hpp"
 
 
 #define __BACKLOG_SIZE 16    /* NOLINT(bugprone-reserved-identifier) */
@@ -52,6 +53,8 @@ public:
     auto disconnect_client ( pthread_t threadId ) -> void;
 };
 
+
+#include "../common/graph/impl/Graph.hpp"
 #include "thread/ServerThread.hpp"
 #include "impl/Server.hpp"
 

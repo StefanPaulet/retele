@@ -11,6 +11,9 @@
 class Edge {
 
 private:
+    uint8 _id;
+
+private:
     std :: pair < Node, Node > _endNodes;
 
 private:
@@ -23,22 +26,31 @@ private:
     std :: string _name;
 
 private:
-    uint8 _event_flag { 0 };
+    bool _traffic_jam { false };
+
+private:
+    bool _roadblock { false };
 
 public:
     Edge (
+            uint8 id,
             Node const & firstEnd,
             Node const & secondEnd,
             uint8 maxSpeed,
             uint8 length,
             std :: string && name
     ) :
+        _id       ( id ),
         _endNodes ( firstEnd, secondEnd ),
         _maxSpeed ( maxSpeed ),
         _length   ( length ),
         _name     ( std :: move ( name ) ) {
 
     }
+
+
+public:
+    [[nodiscard]] constexpr auto getId () const -> uint8;
 
 public:
     [[nodiscard]] constexpr auto getEndNodes () const -> std :: pair < Node, Node >;
@@ -51,6 +63,18 @@ public:
 
 public:
     [[nodiscard]] auto getName () const -> std :: string;
+
+public:
+    auto signalTrafficJam () -> void;
+
+public:
+    auto signalRoadBlock () -> void;
+
+public:
+    auto removeTrafficJam () -> void;
+
+public:
+    auto removeRoadBlock () -> void;
 };
 
 #include "impl/Node.hpp"
