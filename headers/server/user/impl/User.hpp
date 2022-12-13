@@ -67,7 +67,7 @@ auto User :: handle_request () -> void {
                 break;
 
             }
-            case __EVENT_PRESENT : {
+            case __EVENT_MISSING : {
                 if ( this->_waiting_response > 0 ) {
                     this->remove_street_event ( this->_waiting_response );
                     break;
@@ -150,11 +150,11 @@ auto User :: handle_event_removal () -> void {
 
     auto userStreet = pGraph->getStreet ( this->_street_id );
     if ( userStreet->isBlocked() ) {
-        this->send_msg ( "Roadblock signaled on your street. Is it still there?[enter \"y\" to remove it]\n" );
+        this->send_msg ( "Roadblock signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
         this->_waiting_response = 1;
     } else {
         if ( userStreet->isJammed() ) {
-            this->send_msg ( "Traffic jam signaled on your street. Is it still there?[enter \"y\" to remove it]\n" );
+            this->send_msg ( "Traffic jam signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
             this->_waiting_response = 2;
         }
     }
@@ -163,9 +163,9 @@ auto User :: handle_event_removal () -> void {
 
 auto User :: remove_street_event ( uint8 eventType ) const -> void {
 
-    if ( eventType == 0 ) {
+    if ( eventType == 1 ) {
         pGraph->getStreet ( this->_street_id )->remove_roadblock();
-    } else {
+    } else if ( eventType == 2 ) {
         pGraph->getStreet ( this->_street_id )->remove_traffic_jam();
     }
     this->send_msg ( "Thank you! Problem removed\n" );

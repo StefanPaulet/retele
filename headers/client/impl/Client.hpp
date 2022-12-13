@@ -12,7 +12,7 @@ const std :: map < std :: string, int > Client :: _command_map = {
         { "enable-sport-news",   __ENABLE_SPORTS },
         { "enable-weather-news", __ENABLE_WEATHER },
         { "quit",                __EXIT },
-        { "y",                   __EVENT_PRESENT },
+        { "n",                   __EVENT_MISSING },
 
 };
 

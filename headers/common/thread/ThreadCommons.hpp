@@ -28,7 +28,7 @@ enum CommandIDs {
     __TIMED_SPEED_LIMIT_UPDATE    = 5,      /* NOLINT(bugprone-reserved-identifier) */
     __TIMED_EVENT_STILL_PRESENT   = 6,      /* NOLINT(bugprone-reserved-identifier) */
 
-    __EVENT_PRESENT = 1000,     /* NOLINT(bugprone-reserved-identifier) */
+    __EVENT_MISSING = 1000,     /* NOLINT(bugprone-reserved-identifier) */
 };
 
 #endif //CONCURRENT_SV_THREAD_COMMONS_HPP
