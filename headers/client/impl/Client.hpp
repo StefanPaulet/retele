@@ -9,9 +9,11 @@
 const std :: map < std :: string, int > Client :: _command_map = {
         { "signal",              __SIGNAL   },
         { "get-gas-price",       __GET_GP   },
-        { "enable-sport-news",   __ENABLE_S },
-        { "enable-weather-news", __ENABLE_W },
-        { "quit",                __EXIT }
+        { "enable-sport-news",   __ENABLE_SPORTS },
+        { "enable-weather-news", __ENABLE_WEATHER },
+        { "quit",                __EXIT },
+        { "y",                   __EVENT_PRESENT },
+
 };
 
 /**
@@ -50,7 +52,7 @@ auto Client :: initialize_connection () -> bool {
  */
 auto Client :: initialize_consoleOutputThread () -> bool {
 
-    return launch_new_thread ( & _writerThread, & _console_output_main, & _server_fd );
+    return launch_new_thread ( & _writer_thread, & _console_output_main, ( void * ) ( & _server_fd ) );
 }
 
 
@@ -63,25 +65,23 @@ auto Client :: initialize_pingingThreads () -> bool {
     bool returnResult = true;
 
 
-    /*
-     * p_ping_param[i][0] = server file descriptor
-     * p_ping_param[i][1] = request to be sent
-     * p_ping_param[i][2] = frequency of sending
-     */
-    int p_ping_param[5][3];
+    std :: pair < int, int > requests[] = {
+            { __TIMED_EVENTS_UPDATE, 1 },
+            { __TIMED_SPEED_LIMIT_UPDATE, 10 },
+            { __TIMED_SPEED_UPDATE, 60 },
+            { __TIMED_SPORTS_UPDATE, 60 },
+            { __TIMED_WEATHER_UPDATE, 60 },
+            { __TIMED_EVENT_STILL_PRESENT, 10 }
+    };
 
-    p_ping_param [ 0 ][ 2 ] = 1;
-    p_ping_param [ 1 ][ 2 ] = 10;
-    p_ping_param [ 2 ][ 2 ] = 10;
-    p_ping_param [ 3 ][ 2 ] = 60;
-    p_ping_param [ 4 ][ 2 ] = 5;
-
-    for ( int i = 0; i < 5; ++ i ) {
-        p_ping_param [ i ][ 0 ] = this->_server_fd;
-        p_ping_param [ i ][ 1 ] = i + __TIMED_EVENTS_UPDATE;
+    for ( int i = 0; i < 6; ++ i ) {
+        auto threadParameter = new PingingThreadParameter;
+        threadParameter->client   = this;
+        threadParameter->requestNr = requests[i].first;
+        threadParameter->frequency = requests[i].second;
 
         returnResult = returnResult &&
-                launch_new_thread (  & _pinging_threads[ i ], & _pinging_main, p_ping_param[ i ] );
+                launch_new_thread (  & _pinging_threads[ i ], & _pinging_main, ( void * ) threadParameter );
     }
 
     sleep ( 1 );
@@ -93,7 +93,7 @@ auto Client :: initialize_pingingThreads () -> bool {
 /**
  * Main function of client; handles console reading => sending request to server
  */
-auto Client :: client_main () const -> void {
+auto Client :: client_main () -> void {
 
     char buffer[__STANDARD_BUFFER_SIZE];
     char * p_aux;
@@ -120,28 +120,46 @@ auto Client :: client_main () const -> void {
 
         int request_code = _command_map.find( buffer )->second;
 
-        if ( request_code / 100 != 0 && ! hasParams ) {
-            request_code = __BAD_REQUEST;
+        if ( request_code == __SIGNAL && ! hasParams ) {
+            request_code = __NO_PARAM_REQUEST;
         }
 
-        if ( -1 == write ( this->_server_fd, & request_code, sizeof ( int ) ) ) {
-            perror ( "Error at writing" );
-            exit ( EXIT_FAILURE );
+        if ( -1 == this->server_write ( & request_code, sizeof ( int ) ) ) {
+            perror ( "Error at writing to server" );
+            if ( errno == EPIPE ) {
+                exit ( EXIT_FAILURE );
+            }
         }
 
-        if ( request_code / 100 != 0 && hasParams ) {
-            write ( this->_server_fd, p_aux, __STANDARD_BUFFER_SIZE );
+        if ( request_code == __SIGNAL && hasParams ) {
+            if ( -1 == this->server_write ( p_aux, __STANDARD_BUFFER_SIZE ) ) {
+                perror ( "Error at writing to server" );
+                if ( errno == EPIPE ) {
+                    exit ( EXIT_FAILURE );
+                }
+            }
         }
 
         if ( request_code == __EXIT ) {
-            pthread_cancel ( this->_writerThread );
+            pthread_cancel ( this->_writer_thread );
             break;
         }
     }
 
-    pthread_join ( this->_writerThread, nullptr );
+    pthread_join ( this->_writer_thread, nullptr );
     for ( auto i : this->_pinging_threads ) {
         pthread_join ( i, nullptr );
     }
 }
+
+
+auto Client :: server_write (
+        void * message,
+        uint16 length
+) -> sint64 {
+
+    std :: lock_guard lock ( this->_socket_lock );
+    return write ( this->_server_fd, message, length );
+}
+
 #endif //CONCURRENT_SV_CLIENT_IMPL_HPP

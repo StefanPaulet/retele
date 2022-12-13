@@ -7,10 +7,22 @@
 
 #include <list>
 #include <map>
+#include <mutex>
 
-#include "thread/ClientThread.hpp"
 
 class Client {
+
+private:
+    struct PingingThreadParameter {
+        int requestNr { 0 };
+        int frequency { 0 };
+        Client * client { nullptr };
+    };
+
+friend auto _pinging_main ( void * param ) -> void *; /* NOLINT(bugprone-reserved-identifier) */
+
+private:
+    std :: mutex _socket_lock;
 
 private:
     sockaddr_in _server_info { };
@@ -19,7 +31,7 @@ private:
      int _server_fd { 0 };
 
 private:
-    pthread_t _writerThread { };
+    pthread_t _writer_thread { };
 
 private:
     pthread_t _pinging_threads [ 3 ] { };
@@ -40,8 +52,16 @@ public:
     [[nodiscard]] auto initialize_consoleOutputThread () -> bool;
 
 public:
-    auto client_main () const -> void;
+    auto client_main () -> void;
+
+public:
+    auto server_write (
+            void * message,
+            uint16 length
+    ) -> sint64;
 };
+
+#include "thread/ClientThread.hpp"
 
 #include "impl/Client.hpp"
 

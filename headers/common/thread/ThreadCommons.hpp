@@ -12,20 +12,23 @@
  */
 
 enum CommandIDs {
-    __BAD_REQUEST      = 0,         /* NOLINT(bugprone-reserved-identifier) */
-    __NO_PARAM_REQUEST = -1,        /* NOLINT(bugprone-reserved-identifier) */
-    __SIGNAL           = 101,       /* NOLINT(bugprone-reserved-identifier) */
-    __GET_GP           = 2,         /* NOLINT(bugprone-reserved-identifier) */
-    __ENABLE_S         = 3,         /* NOLINT(bugprone-reserved-identifier) */
-    __ENABLE_W         = 4,         /* NOLINT(bugprone-reserved-identifier) */
-    __EXIT             = 99,        /* NOLINT(bugprone-reserved-identifier) */
+    __BAD_REQUEST            = 0,          /* NOLINT(bugprone-reserved-identifier) */
+    __NO_PARAM_REQUEST       = -1,          /* NOLINT(bugprone-reserved-identifier) */
+    __SIGNAL                 = 20,        /* NOLINT(bugprone-reserved-identifier) */
+    __GET_GP                 = 21,         /* NOLINT(bugprone-reserved-identifier) */
+    __ENABLE_SPORTS          = 22,         /* NOLINT(bugprone-reserved-identifier) */
+    __ENABLE_WEATHER         = 23,         /* NOLINT(bugprone-reserved-identifier) */
+    __EXIT                   = 99,         /* NOLINT(bugprone-reserved-identifier) */
 
 
-    __TIMED_EVENTS_UPDATE         = 5,      /* NOLINT(bugprone-reserved-identifier) */
-    __TIMED_SPORTS_UPDATE         = 6,      /* NOLINT(bugprone-reserved-identifier) */
-    __TIMED_WEATHER_UPDATE        = 7,      /* NOLINT(bugprone-reserved-identifier) */
-    __TIMED_SPEED_UPDATE          = 8,      /* NOLINT(bugprone-reserved-identifier) */
-    __TIMED_SPEED_LIMIT_UPDATE    = 9       /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_EVENTS_UPDATE         = 1,      /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_SPORTS_UPDATE         = 2,      /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_WEATHER_UPDATE        = 3,      /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_SPEED_UPDATE          = 4,      /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_SPEED_LIMIT_UPDATE    = 5,      /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_EVENT_STILL_PRESENT   = 6,      /* NOLINT(bugprone-reserved-identifier) */
+
+    __EVENT_PRESENT = 1000,     /* NOLINT(bugprone-reserved-identifier) */
 };
 
 #endif //CONCURRENT_SV_THREAD_COMMONS_HPP

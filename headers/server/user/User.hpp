@@ -19,7 +19,7 @@ private:
     static Graph * pGraph;
 
 private:
-    static std :: array < std :: string, 5 > const signalNamesArray;
+    static std :: array < std :: string, 6 > const signalNamesArray;
 
 private:
     friend auto _queue_supervisor_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
@@ -32,6 +32,12 @@ private:
 
 private:
     uint8 _street_id { 0 };
+
+private:
+    uint8 _vehicle_speed { 30 };
+
+private:
+    uint8 _waiting_response { 0 };
 
 public:
     explicit User ( int clientFd ) :
@@ -59,6 +65,12 @@ public:
 
 public:
     auto handle_speed_limit_update () -> void;
+
+public:
+    auto handle_event_removal () -> void;
+
+private:
+    auto remove_street_event ( uint8 eventType ) const -> void;
 };
 
 #include "../../common/graph/impl/Graph.hpp"

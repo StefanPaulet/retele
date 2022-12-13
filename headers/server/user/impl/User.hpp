@@ -9,12 +9,13 @@ AtomicQueue * User :: pEventQueue = new AtomicQueue ();
 
 Graph * User :: pGraph = new Graph ();
 
-std :: array < std :: string, 5 > const User :: signalNamesArray {
+std :: array < std :: string, 6 > const User :: signalNamesArray {
     "roadblock",
     "police",
+    "accident",
     "wet-ground",
     "frozen-ground",
-    "traffic-jam"
+    "crowded"
 };
 
 
@@ -40,28 +41,12 @@ auto User :: handle_request () -> void {
 
         switch ( request_nr ) {
 
-            case __BAD_REQUEST : {
-                this->send_msg ( "No such command available\n" );
-                break;
-            }
             case __NO_PARAM_REQUEST : {
                 this->send_msg ( "Command must have parameters\n" );
                 break;
             }
             case __SIGNAL : {
                 this->handle_signal();
-                break;
-            }
-            case __GET_GP : {
-                this->send_msg ( "Here are the gas prices\n" );
-                break;
-            }
-            case __ENABLE_S : {
-                this->send_msg ( "You will receive sports news\n" );
-                break;
-            }
-            case __ENABLE_W : {
-                this->send_msg ( "You will receive weather news\n" );
                 break;
             }
             case __EXIT : {
@@ -77,19 +62,19 @@ auto User :: handle_request () -> void {
                 this->handle_speed_limit_update();
                 break;
             }
-//            case __TIMED_SPEED_UPDATE : {
-//                this->send_msg ( "Nice speed bro\n" );
-//                break;
-//            }
-//            case __TIMED_SPORTS_UPDATE : {
-//                this->send_msg ( "WC going on right now\n" );
-//                break;
-//            }
-//            case __TIMED_WEATHER_UPDATE : {
-//                this->send_msg ( "It's a beautiful day\n" );
-//                break;
-//            }
+            case __TIMED_EVENT_STILL_PRESENT : {
+                this->handle_event_removal();
+                break;
+
+            }
+            case __EVENT_PRESENT : {
+                if ( this->_waiting_response > 0 ) {
+                    this->remove_street_event ( this->_waiting_response );
+                    break;
+                }
+            }
             default : {
+                this->send_msg ( "No such command available\n" );
                 break;
             }
         }
@@ -105,6 +90,7 @@ auto User :: handle_signal () -> void {
 
     char buffer [ __STANDARD_BUFFER_SIZE ];
     read ( this->_client_fd, buffer, __STANDARD_BUFFER_SIZE );
+    auto userStreet = pGraph->getStreet ( this->_street_id );
 
     std :: string stringedBuffer { buffer };
 
@@ -113,15 +99,18 @@ auto User :: handle_signal () -> void {
 
             this->send_msg ( "Thank you for your signal\n" );
 
-            stringedBuffer += " on" + pGraph->getStreet ( this->_street_id )->getName() + "\n";
+            stringedBuffer += " on" + userStreet->getName() + "\n";
 
             pEventQueue->push_back ( std :: move ( stringedBuffer ) );
 
             if ( e == "roadblock" ) {
-                pGraph->getStreet ( this->_street_id )->signalRoadBlock();
+                if ( userStreet->isJammed() ) {
+                    userStreet->remove_traffic_jam ();
+                }
+                userStreet->signal_roadblock();
             } else {
-                if ( e == "traffic-jam" ) {
-                    pGraph->getStreet ( this->_street_id )->signalTrafficJam();
+                if ( e != "police" && ! userStreet->isBlocked() ) {
+                    pGraph->getStreet ( this->_street_id )->signal_traffic_jam();
                 }
             }
 
@@ -137,7 +126,7 @@ auto User :: handle_signal () -> void {
 auto User :: handle_event_update () -> void {
 
     if ( this->_pLocalEventNode != pEventQueue->back() ) {
-        std :: string event = "Attention " + this->_pLocalEventNode->_message;
+        std :: string event = "Attention! " + this->_pLocalEventNode->_message;
         this->send_msg ( event );
         this->_pLocalEventNode = this->_pLocalEventNode->_pNext;
     }
@@ -147,7 +136,39 @@ auto User :: handle_event_update () -> void {
 auto User :: handle_speed_limit_update () -> void {
 
     auto speedLimit = pGraph->getStreet ( this->_street_id )->getMaxSpeed();
-    this->send_msg ( "Speed limit is " + std :: to_string ( speedLimit ) + "\n" );
+    if ( speedLimit > this->_vehicle_speed ) {
+        this->send_msg (
+                "Careful! Speed limit is " + std :: to_string ( speedLimit ) + "\n"
+            );
+    }
+}
+
+
+auto User :: handle_event_removal () -> void {
+
+    this->_waiting_response = 0;
+
+    auto userStreet = pGraph->getStreet ( this->_street_id );
+    if ( userStreet->isBlocked() ) {
+        this->send_msg ( "Roadblock signaled on your street. Is it still there?[enter \"y\" to remove it]\n" );
+        this->_waiting_response = 1;
+    } else {
+        if ( userStreet->isJammed() ) {
+            this->send_msg ( "Traffic jam signaled on your street. Is it still there?[enter \"y\" to remove it]\n" );
+            this->_waiting_response = 2;
+        }
+    }
+}
+
+
+auto User :: remove_street_event ( uint8 eventType ) const -> void {
+
+    if ( eventType == 0 ) {
+        pGraph->getStreet ( this->_street_id )->remove_roadblock();
+    } else {
+        pGraph->getStreet ( this->_street_id )->remove_traffic_jam();
+    }
+    this->send_msg ( "Thank you! Problem removed\n" );
 }
 
 #endif //CONCURRENT_SV_USER_IMPL_HPP

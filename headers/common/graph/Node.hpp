@@ -7,6 +7,8 @@
 
 #include <list>
 
+class Edge;
+
 class Node {
 
 private:
@@ -16,7 +18,7 @@ private:
     bool _gas_station;
 
 private:
-    std :: list < Node * > * _pNeighbourList { nullptr };
+    std :: list < Edge * > * _pIncidentStreetList { nullptr };
 
 public:
     explicit constexpr Node (
@@ -26,7 +28,7 @@ public:
         _id          ( id ),
         _gas_station ( gas_station ) {
 
-        this->_pNeighbourList = new std :: list < Node * >;
+        this->_pIncidentStreetList = new std :: list < Edge * >;
     }
 
 public:
@@ -36,8 +38,8 @@ public:
     [[nodiscard]] constexpr auto isGasStation () const -> bool;
 
 public:
-    auto addNeighbour (
-            Node * neighbour
+    auto add_incident_street (
+            Edge * neighbour
     ) -> void;
 };
 

@@ -33,16 +33,19 @@ auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-r
 
 auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserved-identifier) */
 
-    auto parameters = ( int * ) param;
-    int serverFd = parameters[ 0 ];
-    int requestType = parameters [ 1 ];
-    int frequency = parameters [ 2 ];
+    auto parameters = ( Client :: PingingThreadParameter * ) param;
+
+    int requestType = parameters->requestNr;
+    int frequency = parameters->frequency;
+    Client * client = parameters->client;
 
     while ( true ) {
 
         sleep ( frequency );
-        if ( 0 > write ( serverFd, & requestType, 4 ) ) {
-            break;
+        if ( 0 > client->server_write ( & requestType, sizeof ( int ) ) ) {
+            if ( errno == EPIPE ) {
+                break;
+            }
         }
     }
 
@@ -56,10 +59,10 @@ typedef void * ( * ThreadFunctionType ) ( void * );
 static auto launch_new_thread (
                  pthread_t * newThread,
                  ThreadFunctionType threadMain,
-                 int * threadParam
+                 void * threadParam
      ) -> bool {
 
-    if ( 0 > pthread_create ( newThread, nullptr, threadMain, ( void * ) threadParam ) ) {
+    if ( 0 > pthread_create ( newThread, nullptr, threadMain, threadParam ) ) {
         perror ( "Thread creation error" );
         return false;
     }

@@ -42,8 +42,8 @@ Graph :: Graph() {
         std :: getline ( fin, streetName );
 
         this->_pEdgeList [ i ] = new Edge ( i, this->_pNodeList [ firstNode ], this->_pNodeList [ secondNode ], speedLimit, length, std :: move ( streetName ) );
-        this->_pNodeList [ firstNode ]->addNeighbour ( this->_pNodeList [ secondNode ] );
-        this->_pNodeList [ secondNode ]->addNeighbour ( this->_pNodeList [ firstNode ] );
+        this->_pNodeList [ firstNode ]->add_incident_street ( this->_pEdgeList [ i ] );
+        this->_pNodeList [ secondNode ]->add_incident_street ( this->_pEdgeList [ i ] );
     }
 }
 

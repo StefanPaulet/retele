@@ -15,11 +15,11 @@ constexpr auto Node :: isGasStation () const -> bool {
     return this->_gas_station;
 }
 
-inline auto Node :: addNeighbour (
-        Node * neighbour
+inline auto Node :: add_incident_street (
+        Edge * neighbour
     ) -> void {
 
-    this->_pNeighbourList->push_back ( neighbour );
+    this->_pIncidentStreetList->push_back ( neighbour );
 }
 
 #endif //CONCURRENT_SV_NODE_IMPL_HPP

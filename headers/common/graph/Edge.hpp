@@ -53,7 +53,7 @@ public:
     [[nodiscard]] constexpr auto getId () const -> uint8;
 
 public:
-    [[nodiscard]] constexpr auto getEndNodes () const -> std :: pair < Node, Node >;
+    [[nodiscard]] constexpr auto getEndNodes () const -> std :: pair < Node const *, Node const * >;
 
 public:
     [[nodiscard]] constexpr auto getLength () const -> uint8;
@@ -65,16 +65,22 @@ public:
     [[nodiscard]] auto getName () const -> std :: string;
 
 public:
-    auto signalTrafficJam () -> void;
+    [[nodiscard]] auto isJammed () const -> bool;
 
 public:
-    auto signalRoadBlock () -> void;
+    [[nodiscard]] auto isBlocked () const -> bool;
 
 public:
-    auto removeTrafficJam () -> void;
+    auto signal_traffic_jam () -> void;
 
 public:
-    auto removeRoadBlock () -> void;
+    auto signal_roadblock () -> void;
+
+public:
+    auto remove_traffic_jam () -> void;
+
+public:
+    auto remove_roadblock () -> void;
 };
 
 #include "impl/Node.hpp"

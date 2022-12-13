@@ -11,7 +11,7 @@ constexpr auto Edge :: getId () const -> uint8 {
 }
 
 
-constexpr auto Edge :: getEndNodes () const -> std::pair < Node, Node > {
+constexpr auto Edge :: getEndNodes () const -> std :: pair < Node const *, Node const * > {
 
     return this->_endNodes;
 }
@@ -39,25 +39,37 @@ auto Edge :: getName () const -> std::string {
 }
 
 
-auto Edge :: signalTrafficJam () -> void {
+auto Edge :: isJammed () const -> bool {
+
+    return this->_traffic_jam;
+}
+
+
+auto Edge :: isBlocked () const -> bool {
+
+    return this->_roadblock;
+}
+
+
+auto Edge :: signal_traffic_jam () -> void {
 
     this->_traffic_jam = true;
 }
 
 
-auto Edge :: signalRoadBlock () -> void {
+auto Edge :: signal_roadblock () -> void {
 
     this->_roadblock = true;
 }
 
 
-auto Edge :: removeTrafficJam () -> void {
+auto Edge :: remove_traffic_jam () -> void {
 
     this->_traffic_jam = false;
 }
 
 
-auto Edge :: removeRoadBlock () -> void {
+auto Edge :: remove_roadblock () -> void {
 
     this->_roadblock = false;
 }

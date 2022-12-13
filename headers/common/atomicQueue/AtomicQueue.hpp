@@ -46,10 +46,10 @@ public:
     QueueNode _pBack;
 
 private:
-    std :: mutex _backLock;
+    std :: mutex _back_lock;
 
 private:
-    std :: mutex _frontLock;
+    std :: mutex _front_lock;
 
 
 public:
@@ -60,14 +60,14 @@ public:
 public:
     auto back () -> QueueNode const & {
 
-        std :: lock_guard lock ( this->_backLock );
+        std :: lock_guard lock ( this->_back_lock );
         return this->_pBack;
     }
 
 public:
     auto front () -> QueueNode const & {
 
-        std :: lock_guard lock ( this->_frontLock );
+        std :: lock_guard lock ( this->_front_lock );
         return this->_pFront;
     }
 
@@ -75,7 +75,7 @@ public:
 public:
     auto push_back ( std :: string && message ) {
 
-        std :: lock_guard lock ( this->_backLock );
+        std :: lock_guard lock ( this->_back_lock );
 
         auto new_QueueNode = std::make_shared < SharedNode > ();
 
@@ -88,7 +88,7 @@ public:
 public:
     auto pop_front () {
 
-        std :: lock_guard lock ( this->_frontLock );
+        std :: lock_guard lock ( this->_front_lock );
 
         auto oldFront = this->_pFront;
         this->_pFront = this->_pFront->_pNext;
