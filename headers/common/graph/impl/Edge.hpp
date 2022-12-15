@@ -5,7 +5,7 @@
 #ifndef CONCURRENT_SV_EDGE_IMPL_HPP
 #define CONCURRENT_SV_EDGE_IMPL_HPP
 
-constexpr auto Edge :: getId () const -> uint8 {
+constexpr auto Edge :: getId () const -> uint16 {
 
     return this->_id;
 }

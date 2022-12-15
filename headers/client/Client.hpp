@@ -8,7 +8,7 @@
 #include <list>
 #include <map>
 #include <mutex>
-#include "movingVehicle/MovingVehicle.hpp"
+#include "concurrentDescriptor/ConcurrentDescriptor.hpp"
 
 class Client {
 
@@ -22,19 +22,19 @@ private:
 friend auto _pinging_main ( void * param ) -> void *; /* NOLINT(bugprone-reserved-identifier) */
 
 private:
-    std :: mutex _socket_lock;
-
-private:
     sockaddr_in _server_info { };
 
 private:
-     int _server_fd { 0 };
+    ConcurrentDescriptor ;
 
 private:
     pthread_t _writer_thread { };
 
 private:
     pthread_t _pinging_thread { };
+
+private:
+    pthread_t _movement_controlling_thread { };
 
 private:
     static const std :: map < std :: string, int > _command_map;
@@ -52,6 +52,9 @@ public:
     [[nodiscard]] auto initialize_consoleOutputThread () -> bool;
 
 public:
+    [[nodiscard]] auto initialize_movementControllingThread () -> bool;
+
+public:
     auto client_main () -> void;
 
 public:
@@ -61,7 +64,6 @@ public:
     ) -> sint64;
 };
 
-#include "movingVehicle/impl/MovingVehicle.hpp"
 
 #include "thread/ClientThread.hpp"
 

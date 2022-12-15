@@ -11,61 +11,56 @@
 
 class AtomicQueue {
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     friend class User;
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     struct SharedNode {
 
         std :: string                    _message;
-        std :: shared_ptr < SharedNode > _pNext;
+        std :: shared_ptr < SharedNode > _pNext { nullptr };
 
-        SharedNode() :
-                _pNext ( nullptr ) {
-
-        }
+        SharedNode() = default;
 
         explicit SharedNode ( std :: string const & message ) :
-                _message ( message ),
-                _pNext   ( nullptr ) {
+                _message ( message ) {
 
         }
         explicit SharedNode ( std :: string && message ) :
-                _message ( std :: move ( message ) ),
-                _pNext   ( nullptr ) {
+                _message ( std :: move ( message ) ) {
 
         }
     };
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     using QueueNode = std :: shared_ptr < SharedNode >;
 
-public:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     QueueNode _pFront;
 
-public:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     QueueNode _pBack;
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     std :: mutex _back_lock;
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     std :: mutex _front_lock;
 
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     constexpr AtomicQueue () {
         this->_pFront = this->_pBack = std :: make_shared < SharedNode > ();
     }
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto back () -> QueueNode const & {
 
         std :: lock_guard lock ( this->_back_lock );
         return this->_pBack;
     }
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto front () -> QueueNode const & {
 
         std :: lock_guard lock ( this->_front_lock );
@@ -73,7 +68,7 @@ public:
     }
 
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto push_back ( std :: string && message ) {
 
         std :: lock_guard lock ( this->_back_lock );
@@ -81,12 +76,12 @@ public:
         auto new_QueueNode = std::make_shared < SharedNode > ();
 
         this->_pBack->_pNext = new_QueueNode;
-        this->_pBack->_message = message;
+        this->_pBack->_message = std :: move ( message );
         this->_pBack = new_QueueNode;
     }
 
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto pop_front () {
 
         std :: lock_guard lock ( this->_front_lock );

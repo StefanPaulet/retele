@@ -16,62 +16,56 @@ class User {
 private:
     static AtomicQueue * pEventQueue;
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     static Graph * pGraph;
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     static std :: array < std :: string, 6 > const signalNamesArray;
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     friend auto _queue_supervisor_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
 
-private:
-     AtomicQueue :: QueueNode _pLocalEventNode;
+private:    /* NOLINT(readability-redundant-access-specifiers) */
+     AtomicQueue :: QueueNode _pLocalEventNode { pEventQueue->front() };
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     int _client_fd;
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     Vehicle _userPosition { 30, 0 };
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     uint8 _waiting_response { 0 };
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     explicit User ( int clientFd ) :
-        _client_fd ( clientFd ),
-        _pLocalEventNode ( pEventQueue->front() ) {
+        _client_fd ( clientFd ) {
 
     };
 
-public:
-    ~User () {
-        this->_pLocalEventNode.reset ();
-    }
-
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     auto send_msg ( std :: string const & message ) const -> void;
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_request () -> void;
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_signal () -> void;
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_event_update () -> void;
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_speed_limit_update () -> void;
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_event_removal () -> void;
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     auto remove_street_event ( uint8 eventType ) const -> void;
 };
 
-#include "../../common/vehicle/impl/Vehicle.hpp"
+#include "../../common/vehicle/impl/Vehicle.hpp"        /* NOLINT(llvm-include-order) */
 #include "../../common/graph/impl/Graph.hpp"
 
 #endif //CONCURRENT_SV_USER_HPP

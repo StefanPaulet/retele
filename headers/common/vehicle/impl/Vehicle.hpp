@@ -11,7 +11,7 @@ constexpr auto Vehicle :: getSpeed () const -> uint8 {
 }
 
 
-constexpr auto Vehicle :: getStreetId () const -> uint8 {
+constexpr auto Vehicle :: getStreetId () const -> uint16 {
 
     return this->_streetId;
 }
@@ -24,7 +24,7 @@ auto Vehicle :: setSpeed ( uint8 newSpeed ) -> uint8 {
 }
 
 
-auto Vehicle :: setStreetId ( uint8 newStreetId ) -> uint8 {
+auto Vehicle :: setStreetId ( uint16 newStreetId ) -> uint16 {
 
     this->_streetId = newStreetId;
     return this->_streetId;

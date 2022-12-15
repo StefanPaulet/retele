@@ -13,7 +13,7 @@ class Edge;
 class Node {
 
 private:        /* NOLINT(readability-redundant-access-specifiers) */
-    uint8 _id;
+    uint16 _id;
 
 private:        /* NOLINT(readability-redundant-access-specifiers) */
     bool _gas_station;
@@ -23,7 +23,7 @@ private:        /* NOLINT(readability-redundant-access-specifiers) */
 
 public:         /* NOLINT(readability-redundant-access-specifiers) */
     explicit Node (
-            uint8 id,
+            uint16 id,
             bool gas_station = false
     ) :
         _id          ( id ),
@@ -38,7 +38,7 @@ public:     /* NOLINT(readability-redundant-access-specifiers) */
     [[nodiscard]] auto getStreetList () const -> std :: list < Edge * > *;
 
 public:     /* NOLINT(readability-redundant-access-specifiers) */
-    [[nodiscard]] auto getId () const -> uint8;
+    [[nodiscard]] auto getId () const -> uint16;
 
 public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto setGasStation () -> void;

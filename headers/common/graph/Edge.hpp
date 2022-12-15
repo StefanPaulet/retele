@@ -11,7 +11,7 @@
 class Edge {
 
 private:
-    uint8 _id;
+    uint16 _id;
 
 private:
     std :: pair < Node const *, Node const * > _endNodes;
@@ -33,7 +33,7 @@ private:
 
 public:
     Edge (
-            uint8 id,
+            uint16 id,
             Node const * firstEnd,
             Node const * secondEnd,
             uint8 maxSpeed,
@@ -50,7 +50,7 @@ public:
 
 
 public:
-    [[nodiscard]] constexpr auto getId () const -> uint8;
+    [[nodiscard]] constexpr auto getId () const -> uint16;
 
 public:
     [[nodiscard]] constexpr auto getEndNodes () const -> std :: pair < Node const *, Node const * >;

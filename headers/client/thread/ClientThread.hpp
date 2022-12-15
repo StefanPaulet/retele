@@ -7,6 +7,9 @@
 
 #include "../../common/thread/ThreadCommons.hpp"
 
+#include "../movingVehicle/MovingVehicle.hpp"
+#include "../movingVehicle/impl/MovingVehicle.hpp"
+
 auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-reserved-identifier) */
 
     int serverFd = * ( int * ) param;
@@ -60,6 +63,14 @@ auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserve
         ++ cycleCount;
         sleep ( 1 );
     }
+}
+
+
+auto _movement_main ( void * param ) -> void * {        /* NOLINT(bugprone-reserved-identifier) */
+
+    auto client = ( Client * ) param;
+    auto movingVehicle = new MovingVehicle;
+
 }
 
 typedef void * ( * ThreadFunctionType ) ( void * );

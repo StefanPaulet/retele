@@ -35,6 +35,9 @@ private:    /* NOLINT(readability-redundant-access-specifiers) */
 public:
     auto moveVehicle () -> void;
 
+public:
+    auto changeSpeed () -> uint16;
+
 };
 
 

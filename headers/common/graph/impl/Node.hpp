@@ -17,7 +17,7 @@ auto Node :: getStreetList () const -> std :: list < Edge * > * {
 }
 
 
-auto Node :: getId () const -> uint8 {
+auto Node :: getId () const -> uint16 {
 
     return this->_id;
 }

@@ -56,6 +56,12 @@ auto Client :: initialize_consoleOutputThread () -> bool {
 }
 
 
+auto Client :: initialize_movementControllingThread () -> bool {
+
+    return launch_new_thread ( & _movement_controlling_thread, & _movement_main, ( void * ) this );
+}
+
+
 /**
  * Initializing threads that send requests periodically
  * @return bool = function success
