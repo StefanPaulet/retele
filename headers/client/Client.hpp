@@ -1,24 +1,24 @@
-*//
+//
 // Created by stefan on 24.11.2022.
 //
 
 #ifndef CONCURRENT_SV_CLIENT_HPP
 #define CONCURRENT_SV_CLIENT_HPP
 
-#include <list>
-#include <mutex>
-#include <condition_variable>
-#include <map>
 #include "concurrentDescriptor/ConcurrentDescriptor.hpp"
 
 class Client {
 
 private:
-    static const std :: map < std :: string, int, std :: less <> > command_map;
+    static const std :: map < std :: string, int > command_map;
 
 private:
     static std :: mutex conditionMutex;
+
+private:
     static std :: condition_variable conditionVariable;
+
+private:
     static bool serverInformed;
 
     friend auto _movement_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */

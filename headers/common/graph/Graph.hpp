@@ -6,7 +6,6 @@
 #define CONCURRENT_SV_GRAPH_HPP
 
 #include "Edge.hpp"
-#include <fstream>
 
 class Graph {
 

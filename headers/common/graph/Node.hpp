@@ -5,9 +5,6 @@
 #ifndef CONCURRENT_SV_NODE_HPP
 #define CONCURRENT_SV_NODE_HPP
 
-#include <list>
-#include <memory>
-
 class Edge;
 
 class Node {

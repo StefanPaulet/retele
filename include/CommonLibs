@@ -2,35 +2,39 @@
 // Created by stefan on 18.11.2022.
 //
 
-#ifndef COMMON_LIBS_HPP
-#define COMMON_LIBS_HPP
+#ifndef __COMMON_LIBS_HPP
+#define __COMMON_LIBS_HPP       /* NOLINT(bugprone-reserved-identifier) */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <pthread.h>
 #include <sys/socket.h>
-#include <errno.h>
+#include <cerrno>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <string.h>
+#include <cstring>
 #include <list>
 #include <unistd.h>
 #include <string>
+#include <mutex>
+#include <map>
+#include <condition_variable>
+#include <memory>
+#include <fstream>
+#include <utility>
 
-#define __PORT                 7000     /* NOLINT(bugprone-reserved-identifier) */
-#define __STANDARD_BUFFER_SIZE 256      /* NOLINT(bugprone-reserved-identifier) */
+constexpr int __PORT = 7000;                     /* NOLINT(bugprone-reserved-identifier) */
+constexpr int __STANDARD_BUFFER_SIZE = 256;      /* NOLINT(bugprone-reserved-identifier) */
 
-#define __DATABASE_MAP_LOCATION "../resources/map.txt"      /* NOLINT(bugprone-reserved-identifier) */
+using uint8  = unsigned char;
+using uint16 = unsigned short;
+using uint32 = unsigned int;
+using uint64 = unsigned long long;
+using sint8  = char;
+using sint16 = short;
+using sint32 = int;
+using sint64 = long long;
 
-typedef unsigned char      uint8;
-typedef unsigned short     uint16;
-typedef unsigned int       uint32;
-typedef unsigned long long uint64;
-typedef char               sint8;
-typedef short              sint16;
-typedef int                sint32;
-typedef long long          sint64;
-
-#endif //COMMON_LIBS_HPP
+#endif //__COMMON_LIBS_HPP

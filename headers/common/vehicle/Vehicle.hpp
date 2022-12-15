@@ -5,7 +5,6 @@
 #ifndef CONCURRENT_SV_VEHICLE_HPP
 #define CONCURRENT_SV_VEHICLE_HPP
 
-
 class Vehicle {
 
 private:

@@ -5,7 +5,6 @@
 #ifndef CONCURRENT_SV_EDGE_HPP
 #define CONCURRENT_SV_EDGE_HPP
 
-#include <utility>
 #include "Node.hpp"
 
 class Edge {

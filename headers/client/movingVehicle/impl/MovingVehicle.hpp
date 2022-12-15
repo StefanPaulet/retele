@@ -87,6 +87,8 @@ auto MovingVehicle :: changeSpeed () -> uint16 {
     }
 
     this->setSpeed ( this->getSpeed() + MovingVehicle :: getRandomInRange ( 5 ) - 2 );
+
+    return this->getSpeed();
 }
 
 #endif //CONCURRENT_SV_MOVING_VEHICLE_IMPL_HPP

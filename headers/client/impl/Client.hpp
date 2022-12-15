@@ -7,13 +7,13 @@
 
 
 /// Command map used to quickly find name -> command_nr association
-const std :: map < std :: string, int, std :: less <> > Client :: command_map = {
+const std :: map < std :: string, int > Client :: command_map = {
         { "signal",              __SIGNAL   },
         { "get-gas-price",       __GET_GP   },
         { "enable-sport-news",   __ENABLE_SPORTS },
         { "enable-weather-news", __ENABLE_WEATHER },
         { "quit",                __EXIT },
-        { "n",                   __EVENT_MISSING },
+        { "n",                   __EVENT_MISSING }
 
 };
 
@@ -42,7 +42,7 @@ auto Client :: initialize_connection () -> bool {
         return false;
     }
 
-    if ( -1 == connect ( ( int ) this->_server_fd, ( sockaddr * ) ( & _server_info ), sizeof ( _server_info ) ) ) {
+    if ( -1 == connect ( ( int ) this->_server_fd, ( sockaddr * ) ( & this->_server_info ), sizeof ( this->_server_info ) ) ) {
         perror ( "Error at connect" );
         return false;
     }
@@ -57,7 +57,7 @@ auto Client :: initialize_connection () -> bool {
  */
 auto Client :: initialize_consoleOutputThread () -> bool {
 
-    return launch_new_thread ( & _writer_thread, & _console_output_main, ( void * ) ( & _server_fd ) );
+    return launch_new_thread ( & _writer_thread, & _console_output_main, ( void * ) ( & this->_server_fd ) );
 }
 
 
