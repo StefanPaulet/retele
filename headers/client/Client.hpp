@@ -8,7 +8,7 @@
 #include <list>
 #include <map>
 #include <mutex>
-
+#include "movingVehicle/MovingVehicle.hpp"
 
 class Client {
 
@@ -34,7 +34,7 @@ private:
     pthread_t _writer_thread { };
 
 private:
-    pthread_t _pinging_threads [ 3 ] { };
+    pthread_t _pinging_thread { };
 
 private:
     static const std :: map < std :: string, int > _command_map;
@@ -60,6 +60,8 @@ public:
             uint16 length
     ) -> sint64;
 };
+
+#include "movingVehicle/impl/MovingVehicle.hpp"
 
 #include "thread/ClientThread.hpp"
 

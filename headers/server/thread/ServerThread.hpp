@@ -30,7 +30,7 @@ auto _queue_supervisor_main ( void * param ) -> void * {
             User :: pEventQueue->pop_front();
         }
 
-        sleep ( 2 );
+        sleep ( 5 );
     }
 }
 

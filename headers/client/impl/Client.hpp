@@ -62,30 +62,8 @@ auto Client :: initialize_consoleOutputThread () -> bool {
  */
 auto Client :: initialize_pingingThreads () -> bool {
 
-    bool returnResult = true;
-
-
-    std :: pair < int, int > requests[] = {
-            { __TIMED_EVENTS_UPDATE, 1 },
-            { __TIMED_SPEED_LIMIT_UPDATE, 10 },
-            { __TIMED_SPEED_UPDATE, 60 },
-            { __TIMED_SPORTS_UPDATE, 60 },
-            { __TIMED_WEATHER_UPDATE, 60 },
-            { __TIMED_EVENT_STILL_PRESENT, 10 }
-    };
-
-    for ( int i = 0; i < 6; ++ i ) {
-        auto threadParameter = new PingingThreadParameter;
-        threadParameter->client   = this;
-        threadParameter->requestNr = requests[i].first;
-        threadParameter->frequency = requests[i].second;
-
-        returnResult = returnResult &&
-                launch_new_thread (  & _pinging_threads[ i ], & _pinging_main, ( void * ) threadParameter );
-    }
-
+    bool returnResult = launch_new_thread (  & _pinging_thread, & _pinging_main, ( void * ) this );
     sleep ( 1 );
-
     return returnResult;
 }
 
@@ -147,9 +125,7 @@ auto Client :: client_main () -> void {
     }
 
     pthread_join ( this->_writer_thread, nullptr );
-    for ( auto i : this->_pinging_threads ) {
-        pthread_join ( i, nullptr );
-    }
+    pthread_join ( this->_pinging_thread, nullptr );
 }
 
 

@@ -33,25 +33,33 @@ auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-r
 
 auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserved-identifier) */
 
-    auto parameters = ( Client :: PingingThreadParameter * ) param;
+    std :: pair < int, int > requests[] = {
+            { __TIMED_EVENTS_UPDATE, 1 },
+            { __TIMED_SPEED_LIMIT_UPDATE, 10 },
+            { __TIMED_EVENT_STILL_PRESENT, 10 },
+            { __TIMED_SPEED_UPDATE, 60 },
+            { __TIMED_SPORTS_UPDATE, 60 },
+            { __TIMED_WEATHER_UPDATE, 60 }
+    };
 
-    int requestType = parameters->requestNr;
-    int frequency = parameters->frequency;
-    Client * client = parameters->client;
+    auto client = reinterpret_cast < Client * > ( param );
+
+    int cycleCount = 0;
 
     while ( true ) {
 
-        sleep ( frequency );
-        if ( 0 > client->server_write ( & requestType, sizeof ( int ) ) ) {
-            if ( errno == EPIPE ) {
-                break;
+        for ( auto e : requests ) {
+            if ( cycleCount % e.first == 0 ) {
+                if ( client->server_write ( & e.first, sizeof ( int ) ) < 0 && errno == EPIPE ) {
+                    pthread_cancel ( pthread_self() );
+                    return nullptr;
+                }
             }
         }
+
+        ++ cycleCount;
+        sleep ( 1 );
     }
-
-    pthread_cancel ( pthread_self() );
-
-    return nullptr;
 }
 
 typedef void * ( * ThreadFunctionType ) ( void * );

@@ -9,6 +9,7 @@
 #include <memory>
 #include <array>
 #include "../../common/graph/Graph.hpp"
+#include "../../common/vehicle/Vehicle.hpp"
 
 class User {
 
@@ -31,10 +32,7 @@ private:
     int _client_fd;
 
 private:
-    uint8 _street_id { 0 };
-
-private:
-    uint8 _vehicle_speed { 30 };
+    Vehicle _userPosition { 30, 0 };
 
 private:
     uint8 _waiting_response { 0 };
@@ -73,6 +71,7 @@ private:
     auto remove_street_event ( uint8 eventType ) const -> void;
 };
 
+#include "../../common/vehicle/impl/Vehicle.hpp"
 #include "../../common/graph/impl/Graph.hpp"
 
 #endif //CONCURRENT_SV_USER_HPP
