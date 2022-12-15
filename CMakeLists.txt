@@ -10,7 +10,13 @@ set (
         include
 )
 
-include_directories  ( ${PROJ_INCLUDE_DIRECTORIES} )
+set (
+        CDS_INCLUDE_DIRECTORIES
+        CDS/include
+)
+
+include_directories ( ${PROJ_INCLUDE_DIRECTORIES} )
+include_directories ( ${CDS_INCLUDE_DIRECTORIES} )
 
 add_executable(server src/server.cpp)
 add_executable(client src/client.cpp)
