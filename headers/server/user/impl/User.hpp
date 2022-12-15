@@ -67,16 +67,16 @@ auto User :: handle_request () -> void {
                 break;
 
             }
+            case __TIMED_SPORTS_UPDATE :
+            case __TIMED_WEATHER_UPDATE :
+            case __TIMED_SPEED_UPDATE : {
+                break;
+            }
             case __EVENT_MISSING : {
                 if ( this->_waiting_response > 0 ) {
                     this->remove_street_event ( this->_waiting_response );
                     break;
                 }
-            }
-            case __TIMED_SPORTS_UPDATE :
-            case __TIMED_WEATHER_UPDATE :
-            case __TIMED_SPEED_UPDATE : {
-                break;
             }
             default : {
                 this->send_msg ( "No such command available\n" );

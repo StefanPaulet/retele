@@ -55,4 +55,10 @@ auto constexpr Graph :: getStreet (
     return this->_pEdgeList [ streetId ];
 }
 
+
+auto constexpr Graph :: getEdgeCount () const -> uint16 {
+
+    return this->_edgeCount;
+}
+
 #endif //CONCURRENT_SV_GRAPH_IMPL_HPP

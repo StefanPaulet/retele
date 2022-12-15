@@ -6,38 +6,44 @@
 #define CONCURRENT_SV_NODE_HPP
 
 #include <list>
+#include <memory>
 
 class Edge;
 
 class Node {
 
-private:
+private:        /* NOLINT(readability-redundant-access-specifiers) */
     uint8 _id;
 
-private:
+private:        /* NOLINT(readability-redundant-access-specifiers) */
     bool _gas_station;
 
-private:
-    std :: list < Edge * > * _pIncidentStreetList { nullptr };
+private:        /* NOLINT(readability-redundant-access-specifiers) */
+    std :: unique_ptr < std :: list < Edge * > > _pIncidentStreetList = std :: make_unique < std :: list < Edge * > > ();
 
-public:
-    explicit constexpr Node (
+public:         /* NOLINT(readability-redundant-access-specifiers) */
+    explicit Node (
             uint8 id,
             bool gas_station = false
     ) :
         _id          ( id ),
         _gas_station ( gas_station ) {
 
-        this->_pIncidentStreetList = new std :: list < Edge * >;
     }
 
-public:
-    auto setGasStation () -> void;
-
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     [[nodiscard]] constexpr auto isGasStation () const -> bool;
 
-public:
+public:     /* NOLINT(readability-redundant-access-specifiers) */
+    [[nodiscard]] auto getStreetList () const -> std :: list < Edge * > *;
+
+public:     /* NOLINT(readability-redundant-access-specifiers) */
+    [[nodiscard]] auto getId () const -> uint8;
+
+public:     /* NOLINT(readability-redundant-access-specifiers) */
+    auto setGasStation () -> void;
+
+public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto add_incident_street (
             Edge * neighbour
     ) -> void;

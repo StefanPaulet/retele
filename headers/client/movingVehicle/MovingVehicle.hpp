@@ -11,29 +11,29 @@
 
 class MovingVehicle : public Vehicle {
 
-private:
-    Graph * _pGraph;
+private:    /* NOLINT(readability-redundant-access-specifiers) */
+    static std :: random_device * pRandomNrGenerator;
 
-private:
+private:    /* NOLINT(readability-redundant-access-specifiers) */
+    static Graph * pGraph;
+
+private:    /* NOLINT(readability-redundant-access-specifiers) */
     float _distancePercent { 0.0f };
 
-private:
-    std :: random_device * _pRandomNrGenerator;
+private:    /* NOLINT(readability-redundant-access-specifiers) */
+    Node const * _nextNode { nullptr };
 
-private:
-    Node * _nextNode { nullptr };
+private:    /* NOLINT(readability-redundant-access-specifiers) */
+    static auto getRandomInRange ( uint8 maxValue ) -> uint8;
 
-private:
-    auto getRandomInRange ( uint8 maxValue ) -> uint8;
+public:     /* NOLINT(readability-redundant-access-specifiers) */
+    MovingVehicle ();
 
-public:
-    MovingVehicle (
-            uint8 const & speed,
-            uint8 const & streetId
-    );
+private:    /* NOLINT(readability-redundant-access-specifiers) */
+    auto chooseNextStreet () -> Edge *;
 
 public:
-
+    auto moveVehicle () -> void;
 
 };
 

@@ -30,6 +30,8 @@ public:
             int const & streetId
     ) -> Edge * ;
 
+public:
+    [[nodiscard]] auto constexpr getEdgeCount () const -> uint16;
 };
 
 #include "impl/Edge.hpp"

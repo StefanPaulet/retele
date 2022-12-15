@@ -18,7 +18,7 @@ public:
     Vehicle (
             uint8 const & speed,
             uint8 const & streetId
-    ) : _speed   ( speed ),
+    ) : _speed    ( speed ),
         _streetId ( streetId ) {
 
     }
@@ -28,6 +28,11 @@ public:
 
 public:
     [[nodiscard]] constexpr auto getStreetId () const -> uint8;
+
+public:
+    auto setSpeed ( uint8 newSpeed ) -> uint8;
+public:
+    auto setStreetId ( uint8 newStreetId ) -> uint8;
 };
 
 

@@ -1,9 +1,11 @@
 #include <iostream>
 #include <cstring>
-#include <functional>
+#include <list>
+#include <memory>
+
+#include <CommonLibs>
+#include "headers/client/movingVehicle/MovingVehicle.hpp"
+#include "headers/client/movingVehicle/impl/MovingVehicle.hpp"
 
 int main() {
-    int * a, * b;
-    b = a;
-    std :: cout << sizeof ( std :: pair < int *, int * > * );
 }

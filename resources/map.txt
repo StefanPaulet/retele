@@ -1,15 +1,15 @@
 9 12
 2
 1 6
-0 1 30 5 Strada Minervei
-1 2 30 4 Strada Minervei
-3 4 30 6 Strada Egalitatii
-4 5 30 5 Strada Egalitatii
-6 7 30 8 Strada Salciilor
-7 8 30 4 Strada Salciilor
-0 3 50 7 Strada Orientului
-3 6 50 2 Strada Orientului
-1 4 60 9 Strada Gheroghe Doja
-4 7 60 5 Strada Gheroghe Doja
-2 5 90 3 Strada Petre Tutea
-5 8 90 15 Strada Petre Tutea
+0 1 30 5 Strada 1
+1 2 30 4 Strada 2
+3 4 30 6 Strada 3
+4 5 30 5 Strada 4
+6 7 30 8 Strada 5
+7 8 30 4 Strada 6
+0 3 50 7 Strada 7
+3 6 50 2 Strada 8
+1 4 60 9 Strada 9
+4 7 60 5 Strada 10
+2 5 90 3 Strada 11
+5 8 90 15 Strada 12
