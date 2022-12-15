@@ -9,7 +9,7 @@
 auto MovingVehicle :: pRandomNrGenerator = new std :: random_device;
 auto MovingVehicle :: pGraph = new Graph();
 
-auto MovingVehicle :: getRandomInRange ( uint8 maxValue ) -> uint8 {
+auto MovingVehicle :: getRandomInRange ( uint16 maxValue ) -> uint16 {
 
     return ( ( * MovingVehicle :: pRandomNrGenerator )() % maxValue );
 }
@@ -76,6 +76,17 @@ auto MovingVehicle :: moveVehicle () -> void {
                     ///TODO: set to 0.01f for immersion
                 );
     }
+}
+
+
+auto MovingVehicle :: changeSpeed () -> uint16 {
+
+    if ( this->getSpeed() < 10 ) {
+        this->setSpeed ( 20 );
+        return this->getSpeed();
+    }
+
+    this->setSpeed ( this->getSpeed() + MovingVehicle :: getRandomInRange ( 5 ) - 2 );
 }
 
 #endif //CONCURRENT_SV_MOVING_VEHICLE_IMPL_HPP

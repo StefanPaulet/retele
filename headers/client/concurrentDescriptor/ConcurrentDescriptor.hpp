@@ -16,8 +16,21 @@ private:
 public:
     explicit ConcurrentDescriptor (
             int const & fd
-        ) : _fd ( server_fd ) {
+        ) : _fd ( fd ) {
 
+    }
+
+public:
+    auto operator= ( int const & fd ) -> int & {
+
+        this->_fd = fd;
+        return this->_fd;
+    }
+
+public:
+    explicit operator int () const {
+
+        return this->_fd;
     }
 
 public:
@@ -34,7 +47,7 @@ public:
     auto read (
             void * message,
             uint16 length
-    ) -> sint64 {
+    ) const -> sint64 {
 
         return :: read ( this->_fd, message, length );
     }

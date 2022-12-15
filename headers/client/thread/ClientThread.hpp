@@ -12,20 +12,22 @@
 
 auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-reserved-identifier) */
 
-    int serverFd = * ( int * ) param;
+    auto serverFd = reinterpret_cast < ConcurrentDescriptor * > ( param );
 
     uint64 bufferSize;
     char buffer [ __STANDARD_BUFFER_SIZE ];
 
     while ( true ) {
 
-        if ( 0 >= read ( serverFd, & bufferSize, sizeof ( bufferSize ) ) ) {
+        if ( 0 >= serverFd->read ( & bufferSize, sizeof ( bufferSize ) ) ) {
             printf ( "Server connection dropped\n" );
-            break;
+            pthread_cancel ( pthread_self() );
+            return nullptr;
         }
-        if ( 0 >= read ( serverFd, buffer, bufferSize )) {
+        if ( 0 >= serverFd->read ( buffer, bufferSize )) {
             printf ( "Server connection dropped\n" );
-            break;
+            pthread_cancel ( pthread_self() );
+            return nullptr;
         }
         write ( 1, buffer, bufferSize );
     }
@@ -45,15 +47,15 @@ auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserve
             { __TIMED_WEATHER_UPDATE, 60 }
     };
 
-    auto client = reinterpret_cast < Client * > ( param );
+    auto clientFd = reinterpret_cast < ConcurrentDescriptor * > ( param );
 
     int cycleCount = 0;
 
     while ( true ) {
 
         for ( auto e : requests ) {
-            if ( cycleCount % e.first == 0 ) {
-                if ( client->server_write ( & e.first, sizeof ( int ) ) < 0 && errno == EPIPE ) {
+            if ( cycleCount % e.second == 0 ) {
+                if ( clientFd->write ( & e.first, sizeof ( int ) ) < 0 && errno == EPIPE ) {
                     pthread_cancel ( pthread_self() );
                     return nullptr;
                 }
@@ -68,9 +70,68 @@ auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserve
 
 auto _movement_main ( void * param ) -> void * {        /* NOLINT(bugprone-reserved-identifier) */
 
-    auto client = ( Client * ) param;
+    auto serverFd = reinterpret_cast < ConcurrentDescriptor * > ( param );
     auto movingVehicle = new MovingVehicle;
 
+    {
+        std :: unique_lock lk ( Client :: conditionMutex );
+        Client :: conditionVariable.wait ( lk, [] { return ! Client :: serverInformed; } );
+
+        auto request = __INITIALIZING_POSITION_REQUEST;
+        auto requestParam = movingVehicle->getStreetId();
+        serverFd->write ( &request, sizeof ( request ) );
+        serverFd->write ( & requestParam, sizeof ( requestParam ) );
+
+        request = __INITIALIZING_SPEED_REQUEST;
+        requestParam = movingVehicle->getSpeed();
+        serverFd->write ( &request, sizeof ( request ) );
+        serverFd->write ( & requestParam, sizeof ( requestParam ) );
+
+        Client :: serverInformed = true;
+
+        Client :: conditionVariable.notify_one();
+
+    }
+
+    sleep ( 1 );
+
+    auto speedRequest    = __TIMED_SPEED_UPDATE;
+    auto positionRequest = __TIMED_POSITION_UPDATE;
+    auto speedParameter  = movingVehicle->getSpeed();
+    auto positionParameter = movingVehicle->getStreetId();
+
+    while ( true ) {
+
+        movingVehicle->changeSpeed();
+        movingVehicle->moveVehicle();
+
+        speedParameter  = movingVehicle->getSpeed();
+        positionParameter = movingVehicle->getStreetId();
+
+        if ( -1 == serverFd->write ( & speedRequest, sizeof ( speedRequest ) ) && errno == EPIPE ) {
+            pthread_cancel ( pthread_self() );
+            return nullptr;
+        }
+
+        if ( -1 == serverFd->write ( & speedParameter, sizeof ( speedParameter ) ) ) {
+            pthread_cancel ( pthread_self() );
+            return nullptr;
+        }
+
+        if ( -1 == serverFd->write ( & positionRequest, sizeof ( positionRequest ) ) ) {
+            pthread_cancel ( pthread_self() );
+            return nullptr;
+        }
+        if ( -1 == serverFd->write ( & positionParameter, sizeof ( positionParameter ) ) ) {
+            pthread_cancel ( pthread_self() );
+            return nullptr;
+        }
+
+        sleep ( 1 );
+
+    }
+
+    return nullptr;
 }
 
 typedef void * ( * ThreadFunctionType ) ( void * );

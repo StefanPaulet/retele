@@ -24,7 +24,7 @@ private:    /* NOLINT(readability-redundant-access-specifiers) */
     Node const * _nextNode { nullptr };
 
 private:    /* NOLINT(readability-redundant-access-specifiers) */
-    static auto getRandomInRange ( uint8 maxValue ) -> uint8;
+    static auto getRandomInRange ( uint16 maxValue ) -> uint16;
 
 public:     /* NOLINT(readability-redundant-access-specifiers) */
     MovingVehicle ();

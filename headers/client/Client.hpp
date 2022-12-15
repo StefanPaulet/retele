@@ -1,4 +1,4 @@
-//
+*//
 // Created by stefan on 24.11.2022.
 //
 
@@ -6,26 +6,28 @@
 #define CONCURRENT_SV_CLIENT_HPP
 
 #include <list>
-#include <map>
 #include <mutex>
+#include <condition_variable>
+#include <map>
 #include "concurrentDescriptor/ConcurrentDescriptor.hpp"
 
 class Client {
 
 private:
-    struct PingingThreadParameter {
-        int requestNr { 0 };
-        int frequency { 0 };
-        Client * client { nullptr };
-    };
+    static const std :: map < std :: string, int, std :: less <> > command_map;
 
-friend auto _pinging_main ( void * param ) -> void *; /* NOLINT(bugprone-reserved-identifier) */
+private:
+    static std :: mutex conditionMutex;
+    static std :: condition_variable conditionVariable;
+    static bool serverInformed;
+
+    friend auto _movement_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
 
 private:
     sockaddr_in _server_info { };
 
 private:
-    ConcurrentDescriptor ;
+    ConcurrentDescriptor _server_fd { 0 };
 
 private:
     pthread_t _writer_thread { };
@@ -35,9 +37,6 @@ private:
 
 private:
     pthread_t _movement_controlling_thread { };
-
-private:
-    static const std :: map < std :: string, int > _command_map;
 
 public:
     Client();
@@ -56,17 +55,10 @@ public:
 
 public:
     auto client_main () -> void;
-
-public:
-    auto server_write (
-            void * message,
-            uint16 length
-    ) -> sint64;
 };
 
 
-#include "thread/ClientThread.hpp"
-
+#include "thread/ClientThread.hpp"      /* NOLINT(llvm-include-order) */
 #include "impl/Client.hpp"
 
 #endif //CONCURRENT_SV_CLIENT_HPP

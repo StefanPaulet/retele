@@ -17,6 +17,11 @@ int main () {
 
     printf ( "Connected to server\n" );
 
+    if ( ! client->initialize_movementControllingThread() ) {
+        perror ( "Thread creation error" );
+        exit ( EXIT_FAILURE );
+    }
+
     if ( ! client->initialize_consoleOutputThread() ) {
         perror ( "Thread creation error" );
         exit ( EXIT_FAILURE );
