@@ -84,6 +84,7 @@ auto User :: handle_request () -> void {
             break;
         }
 
+//        printf ( "Client sent %d\n", request_nr );
 
         switch ( request_nr ) {
 
@@ -114,9 +115,16 @@ auto User :: handle_request () -> void {
                 break;
 
             }
-            case __TIMED_SPORTS_UPDATE :
-            case __TIMED_WEATHER_UPDATE :
+            case __TIMED_POSITION_UPDATE : {
+                this->handle_position_update();
+                break;
+            }
             case __TIMED_SPEED_UPDATE : {
+                this->handle_speed_update();
+                break;
+            }
+            case __TIMED_SPORTS_UPDATE :
+            case __TIMED_WEATHER_UPDATE : {
                 break;
             }
             case __EVENT_MISSING : {
@@ -141,7 +149,9 @@ auto User :: handle_request () -> void {
 auto User :: handle_signal () -> void {
 
     char buffer [ __STANDARD_BUFFER_SIZE ];
-    read ( this->_client_fd, buffer, __STANDARD_BUFFER_SIZE );
+    if ( 0 >= read ( this->_client_fd, buffer, __STANDARD_BUFFER_SIZE ) ) {
+        return;
+    }
     auto userStreet = pGraph->getStreet ( this->_userPosition.getStreetId() );
 
     std :: string stringedBuffer { buffer };
@@ -178,7 +188,7 @@ auto User :: handle_signal () -> void {
 auto User :: handle_event_update () -> void {
 
     if ( this->_pLocalEventNode != pEventQueue->back() ) {
-        std :: string event = "Attention! " + this->_pLocalEventNode->_message;
+        std :: string event = "Attention: " + this->_pLocalEventNode->_message;
         this->send_msg ( event );
         this->_pLocalEventNode = this->_pLocalEventNode->_pNext;
     }
@@ -188,7 +198,7 @@ auto User :: handle_event_update () -> void {
 auto User :: handle_speed_limit_update () -> void {
 
     auto speedLimit = pGraph->getStreet ( this->_userPosition.getStreetId() )->getMaxSpeed();
-    if ( speedLimit > this->_userPosition.getSpeed() ) {
+    if ( speedLimit < this->_userPosition.getSpeed() ) {
         this->send_msg (
                 "Careful! Speed limit is " + std :: to_string ( speedLimit ) + "\n"
             );
@@ -221,6 +231,28 @@ auto User :: remove_street_event ( uint8 eventType ) const -> void {
         pGraph->getStreet ( this->_userPosition.getStreetId() )->remove_traffic_jam();
     }
     this->send_msg ( "Thank you! Problem removed\n" );
+}
+
+
+auto User :: handle_position_update () -> void {
+
+    uint16 newPosition;
+    if ( 0 >= read ( this->_client_fd, & newPosition, sizeof ( newPosition ) ) ) {
+        return;
+    }
+    if ( this->_userPosition.getStreetId() != newPosition ) {
+        this->_userPosition.setStreetId ( newPosition );
+    }
+}
+
+
+auto User :: handle_speed_update () -> void {
+
+    uint8 newSpeed;
+    if ( 0 >= read ( this->_client_fd, & newSpeed, sizeof ( newSpeed ) ) ) {
+        return;
+    }
+    this->_userPosition.setSpeed ( newSpeed );
 }
 
 #endif //CONCURRENT_SV_USER_IMPL_HPP

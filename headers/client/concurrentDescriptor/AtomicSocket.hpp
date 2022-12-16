@@ -2,10 +2,10 @@
 // Created by stefan on 15.12.2022.
 //
 
-#ifndef CONCURRENT_SV_CONCURRENT_DESCRIPTOR_HPP
-#define CONCURRENT_SV_CONCURRENT_DESCRIPTOR_HPP
+#ifndef CONCURRENT_SV_ATOMIC_SOCKET_HPP
+#define CONCURRENT_SV_ATOMIC_SOCKET_HPP
 
-class ConcurrentDescriptor {
+class AtomicSocket {
 
 private:
     int _fd { 0 };
@@ -14,7 +14,7 @@ private:
     std :: mutex _descriptor_lock;
 
 public:
-    explicit ConcurrentDescriptor (
+    explicit AtomicSocket (
             int const & fd
         ) : _fd ( fd ) {
 
@@ -35,12 +35,24 @@ public:
 
 public:
     auto write (
-            void * message,
-            uint16 length
+            void const * message,
+            uint16 length,
+            void const * param = nullptr,
+            uint16 paramLength = 0
     ) -> sint64 {
 
+
         std :: lock_guard lock ( this->_descriptor_lock );
-        return :: write ( this->_fd, message, length );
+        auto result = :: write ( this->_fd, message, length );
+        if ( result < 0 ) {
+            return result;
+        }
+
+        if ( param != nullptr ) {
+            result = :: write ( this->_fd, param, paramLength );
+        }
+
+        return result;
     }
 
 public:
@@ -53,4 +65,4 @@ public:
     }
 };
 
-#endif //CONCURRENT_SV_CONCURRENT_DESCRIPTOR_HPP
+#endif //CONCURRENT_SV_ATOMIC_SOCKET_HPP

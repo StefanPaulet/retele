@@ -121,19 +121,15 @@ auto Client :: client_main () -> void {
             request_code = __NO_PARAM_REQUEST;
         }
 
-        if ( -1 == this->_server_fd.write( & request_code, sizeof ( int ) ) ) {
-            perror ( "Error at writing to server" );
-            if ( errno == EPIPE ) {
-                exit ( EXIT_FAILURE );
-            }
+        if ( request_code != __SIGNAL && hasParams ) {
+            request_code = __BAD_REQUEST;
+            p_aux = nullptr;
         }
 
-        if ( request_code == __SIGNAL && hasParams ) {
-            if ( -1 == this->_server_fd.write ( p_aux, __STANDARD_BUFFER_SIZE ) ) {
-                perror ( "Error at writing to server" );
-                if ( errno == EPIPE ) {
-                    exit ( EXIT_FAILURE );
-                }
+        if ( -1 == this->_server_fd.write( & request_code, sizeof ( int ), p_aux, __STANDARD_BUFFER_SIZE ) ) {
+            if ( errno == EPIPE ) {
+                perror ( "Fatal error: Sending request to server problem" );
+                exit ( EXIT_FAILURE );
             }
         }
 

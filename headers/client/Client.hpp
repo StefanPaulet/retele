@@ -5,7 +5,7 @@
 #ifndef CONCURRENT_SV_CLIENT_HPP
 #define CONCURRENT_SV_CLIENT_HPP
 
-#include "concurrentDescriptor/ConcurrentDescriptor.hpp"
+#include "concurrentDescriptor/AtomicSocket.hpp"
 
 class Client {
 
@@ -27,7 +27,7 @@ private:
     sockaddr_in _server_info { };
 
 private:
-    ConcurrentDescriptor _server_fd { 0 };
+    AtomicSocket _server_fd { 0 };
 
 private:
     pthread_t _writer_thread { };

@@ -66,6 +66,12 @@ private:     /* NOLINT(readability-redundant-access-specifiers) */
 
 private:    /* NOLINT(readability-redundant-access-specifiers) */
     auto remove_street_event ( uint8 eventType ) const -> void;
+
+private:
+    auto handle_position_update () -> void;
+
+private:
+    auto handle_speed_update () -> void;
 };
 
 #include "../../common/vehicle/impl/Vehicle.hpp"        /* NOLINT(llvm-include-order) */
