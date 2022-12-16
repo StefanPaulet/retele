@@ -5,18 +5,18 @@
 #ifndef CONCURRENT_SV_GRAPH_IMPL_HPP
 #define CONCURRENT_SV_GRAPH_IMPL_HPP
 
-#define  __MAP_DATABASE_FILE "../resources/map.txt"      /* NOLINT(bugprone-reserved-identifier) */
 
 Graph :: Graph() {
 
+    cds :: String mapPathString = cds :: filesystem :: Path ( __COMMON_LIBS_PATH ).parent().parent() / "resources/map.json";
+    auto mapPathStringLiteral = mapPathString.cStr();
+    std :: stringstream iss;
+    iss << std :: ifstream ( mapPathStringLiteral ).rdbuf();
 
-    std :: ifstream fin ( __MAP_DATABASE_FILE );
+    auto jsonData = cds :: json :: parseJson ( iss.str() );
 
-    int nodeCount, edgeCount;
-    fin >> nodeCount >> edgeCount;
-
-    this->_nodeCount = nodeCount;
-    this->_edgeCount = edgeCount;
+    this->_nodeCount = jsonData.getInt ( "nodeCount" );
+    this->_edgeCount = jsonData.getInt ( "edgeCount" );
 
 
     this->_pNodeList = new Node * [ this->_nodeCount ];
@@ -26,24 +26,26 @@ Graph :: Graph() {
         this->_pNodeList [ i ] = new Node ( i );
     }
 
-    int gasStationCount;
-    fin >> gasStationCount;
-    for ( int i = 0; i < gasStationCount; ++ i ) {
-        int gasStation;
-        fin >> gasStation;
+    for ( auto & e : jsonData.getArray ( "gasStations" ) ) {
+        int gasStation = e.getJson().getInt ( "id" );
         this->_pNodeList [ gasStation ]->setGasStation();
     }
 
-    for ( int i = 0; i < this->_edgeCount; ++ i ) {
-        int firstNode, secondNode, speedLimit, length;
-        std :: string streetName;
+    int i = 0;
+    for ( auto & e : jsonData.getArray ( "streets" ) ) {
+        auto aux = e.getJson();
 
-        fin >> firstNode >> secondNode >> speedLimit >> length;
-        std :: getline ( fin, streetName );
+        uint16 firstNode   = aux.getInt ( "firstEndId" );
+        uint16 secondNode  = aux.getInt ( "secondEndId" );
+        uint8 speedLimit   = aux.getInt ( "speedLimit" );
+        uint8 length       = aux.getInt ( "length" );
+        std :: string name = aux.getString ( "name" );
 
-        this->_pEdgeList [ i ] = new Edge ( i, this->_pNodeList [ firstNode ], this->_pNodeList [ secondNode ], speedLimit, length, std :: move ( streetName ) );
+        this->_pEdgeList [ i ] = new Edge ( i, this->_pNodeList [ firstNode ], this->_pNodeList [ secondNode ], speedLimit, length, std :: move ( name ) );
         this->_pNodeList [ firstNode ]->add_incident_street ( this->_pEdgeList [ i ] );
         this->_pNodeList [ secondNode ]->add_incident_street ( this->_pEdgeList [ i ] );
+
+        i ++;
     }
 }
 
@@ -59,6 +61,12 @@ auto constexpr Graph :: getStreet (
 auto constexpr Graph :: getEdgeCount () const -> uint16 {
 
     return this->_edgeCount;
+}
+
+
+auto constexpr Graph :: getNodeCount () const -> uint16 {
+
+    return this->_nodeCount;
 }
 
 #endif //CONCURRENT_SV_GRAPH_IMPL_HPP

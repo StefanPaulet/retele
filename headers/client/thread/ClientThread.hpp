@@ -87,6 +87,10 @@ auto _movement_main ( void * param ) -> void * {        /* NOLINT(bugprone-reser
         serverFd->write ( &request, sizeof ( request ) );
         serverFd->write ( & requestParam, sizeof ( requestParam ) );
 
+        printf ( "I sent my position %d and speed %d to the server\n",
+                 movingVehicle->getStreetId(),
+                 movingVehicle->getSpeed() );
+
         Client :: serverInformed = true;
 
         Client :: conditionVariable.notify_one();

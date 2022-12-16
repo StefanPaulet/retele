@@ -24,16 +24,19 @@
 #include <memory>
 #include <fstream>
 #include <utility>
+#include <filesystem>
 
 constexpr int __PORT = 7000;                     /* NOLINT(bugprone-reserved-identifier) */
 constexpr int __STANDARD_BUFFER_SIZE = 256;      /* NOLINT(bugprone-reserved-identifier) */
+
+constexpr auto __COMMON_LIBS_PATH = __FILE__;   /* NOLINT(bugprone-reserved-identifier) */
 
 using uint8  = unsigned char;
 using uint16 = unsigned short;
 using uint32 = unsigned int;
 using uint64 = unsigned long long;
 using sint8  = char;
-using sint16 = short;
+using sint16 = short int;
 using sint32 = int;
 using sint64 = long long;
 

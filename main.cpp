@@ -1,11 +1,25 @@
 
 #include <CommonLibs>
-#include <CDS/experimental/TreeMap>
+#include <CDS/util/JSON>
+#include <CDS/filesystem/Path>
 #include "headers/client/concurrentDescriptor/ConcurrentDescriptor.hpp"
 
+
 int main() {
-    cds :: experimental :: TreeMap <int, int> tm { {1,2}, {3,4}, {5,6} };
-    for ( auto e : tm.keys() ) {
-        std :: cout << e << ' ' << '\n';
+    cds :: String in1 = cds :: filesystem :: Path ( __FILE__ ).parent() / "resources/map.json";
+    auto in1Path = in1.cStr();
+    std :: stringstream iss;
+    iss << std :: ifstream ( in1Path ).rdbuf ();
+    auto json = cds :: json :: parseJson ( iss.str() );
+    std :: cout << json.toString() << '\n';
+    for ( auto & e : json.getArray ( "streets" ) ) {
+        std::cout << e.getJson().getInt ( "firstEndId" ) << ' ';
+        std::cout << e.getJson().getInt ( "secondEndId" ) << ' ';
+        std::cout << e.getJson().getInt ( "speedLimit" ) << ' ';
+        std::cout << e.getJson().getInt ( "length" ) << ' ';
+        std::cout << e.getJson().getString ( "name" ) << '\n';
+    }
+    for ( auto & e : json.getArray ( "gasStations" ) ) {
+        std :: cout << e.getJson().getInt ( "id" ) << '\n';
     }
 }

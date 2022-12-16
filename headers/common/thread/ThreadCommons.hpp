@@ -11,7 +11,7 @@
  * Request with param -> request_id / 100 = param_count
  */
 
-enum CommandIDs {
+enum CommandIDs : sint16 {
     __BAD_REQUEST            = 0,          /* NOLINT(bugprone-reserved-identifier) */
     __NO_PARAM_REQUEST       = -1,         /* NOLINT(bugprone-reserved-identifier) */
     __SIGNAL                 = 20,         /* NOLINT(bugprone-reserved-identifier) */

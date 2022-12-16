@@ -23,6 +23,10 @@ int main () {
         exit ( EXIT_FAILURE );
     }
 
+    Client :: wait_position_initialization();
+
+    printf ( "Position has been sent to server\n" );
+
     if ( ! client->initialize_consoleOutputThread() ) {
         perror ( "Thread creation error" );
         exit ( EXIT_FAILURE );

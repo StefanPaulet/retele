@@ -27,19 +27,66 @@ auto User :: send_msg ( std :: string const & message ) const -> void {
     write ( this->_client_fd, message.c_str(), messageSize );
 }
 
+
+auto User :: receive_initial_data () -> bool {
+
+    sint16 request_nr;
+    uint16 recv_position;
+    uint8 recv_speed;
+
+    if ( 0 >= read ( this->_client_fd, & request_nr, sizeof ( request_nr ) ) ) {
+        return false;
+    }
+    if ( request_nr != __INITIALIZING_POSITION_REQUEST ) {
+        fprintf ( stderr, "Client %d failed to send his initial position\n", this->_client_fd );
+        return false;
+    }
+
+    if ( 0 >= read ( this->_client_fd, & recv_position, sizeof ( recv_position ) ) ) {
+        return false;
+    }
+    this->_userPosition.setStreetId ( recv_position );
+
+    if ( 0 >= read ( this->_client_fd, & request_nr, sizeof ( request_nr ) ) ) {
+        return false;
+    }
+    if ( request_nr != __INITIALIZING_SPEED_REQUEST ) {
+        fprintf ( stderr, "Client %d failed to send his initial speed\n", this->_client_fd );
+        return false;
+    }
+
+    if ( 0 >= read ( this->_client_fd, & recv_speed, sizeof ( recv_speed ) ) ) {
+        return false;
+    }
+    this->_userPosition.setSpeed( recv_speed );
+
+    printf ( "Client %d sent his position %d and speed %d\n",
+            this->_client_fd,
+            this->_userPosition.getStreetId(),
+            this->_userPosition.getSpeed() );
+    return true;
+}
+
+
 auto User :: handle_request () -> void {
 
     bool clientConnected = true;
-    sint32 request_nr;
+    sint16 request_nr;
+
+    if ( ! this->receive_initial_data() ) {
+        pthread_cancel ( pthread_self() );
+        return;
+    }
 
     while ( clientConnected ) {
 
-        if ( 0 >= read ( this->_client_fd, & request_nr, sizeof ( int ) ) ) {
+        if ( 0 >= read ( this->_client_fd, & request_nr, sizeof ( request_nr ) ) ) {
             break;
         }
 
 
         switch ( request_nr ) {
+
 
             case __NO_PARAM_REQUEST : {
                 this->send_msg ( "Command must have parameters\n" );

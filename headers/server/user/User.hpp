@@ -46,19 +46,22 @@ public:     /* NOLINT(readability-redundant-access-specifiers) */
 private:    /* NOLINT(readability-redundant-access-specifiers) */
     auto send_msg ( std :: string const & message ) const -> void;
 
+private:
+    auto receive_initial_data () -> bool;
+
 public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_request () -> void;
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
+private:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_signal () -> void;
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
+private:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_event_update () -> void;
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
+private:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_speed_limit_update () -> void;
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
+private:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_event_removal () -> void;
 
 private:    /* NOLINT(readability-redundant-access-specifiers) */

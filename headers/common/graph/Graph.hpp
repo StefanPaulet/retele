@@ -6,6 +6,8 @@
 #define CONCURRENT_SV_GRAPH_HPP
 
 #include "Edge.hpp"
+#include <CDS/util/JSON>
+#include <CDS/filesystem/Path>
 
 class Graph {
 
@@ -31,6 +33,9 @@ public:
 
 public:
     [[nodiscard]] auto constexpr getEdgeCount () const -> uint16;
+
+public:
+    [[nodiscard]] auto constexpr getNodeCount () const -> uint16;
 };
 
 #include "impl/Edge.hpp"

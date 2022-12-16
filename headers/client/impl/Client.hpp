@@ -51,6 +51,20 @@ auto Client :: initialize_connection () -> bool {
 
 }
 
+
+auto Client :: initialize_movementControllingThread () -> bool {
+
+    return launch_new_thread ( & _movement_controlling_thread, & _movement_main, ( void * ) ( & this->_server_fd ) );
+}
+
+
+auto Client :: wait_position_initialization () -> void {
+
+    std :: unique_lock lk ( conditionMutex );
+    conditionVariable.wait ( lk, []{ return serverInformed; } );
+}
+
+
 /**
  * Initializing thread that handles reads from server => output to console
  * @return bool = function success
@@ -58,12 +72,6 @@ auto Client :: initialize_connection () -> bool {
 auto Client :: initialize_consoleOutputThread () -> bool {
 
     return launch_new_thread ( & _writer_thread, & _console_output_main, ( void * ) ( & this->_server_fd ) );
-}
-
-
-auto Client :: initialize_movementControllingThread () -> bool {
-
-    return launch_new_thread ( & _movement_controlling_thread, & _movement_main, ( void * ) ( & this->_server_fd ) );
 }
 
 
@@ -86,11 +94,6 @@ auto Client :: client_main () -> void {
 
     char buffer[__STANDARD_BUFFER_SIZE];
     char * p_aux;
-
-    {
-        std :: unique_lock lk ( conditionMutex );
-        conditionVariable.wait ( lk, []{ return serverInformed; } );
-    }
 
     auto split_param = [] ( char * initialBuffer, char * & parameters ) -> bool {
 

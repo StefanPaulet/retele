@@ -1,0 +1,99 @@
+{
+  "nodeCount" : 9,
+  "edgeCount" : 12,
+  "gasStationCount" : 2,
+  "gasStations" : [
+    {
+      "id" : 1
+    },
+    {
+      "id" : 6
+    }
+  ],
+  "streets" : [
+    {
+      "firstEndId" : 0,
+      "secondEndId" : 1,
+      "speedLimit" : 30,
+      "length" : 5,
+      "name" : "Strada 1"
+    },
+    {
+      "firstEndId" : 1,
+      "secondEndId" : 2,
+      "speedLimit" : 30,
+      "length" : 4,
+      "name" : "Strada 2"
+    },
+    {
+      "firstEndId" : 3,
+      "secondEndId" : 4,
+      "speedLimit" : 30,
+      "length" : 6,
+      "name" : "Strada 3"
+    },
+    {
+      "firstEndId" : 4,
+      "secondEndId" : 5,
+      "speedLimit" : 30,
+      "length" : 5,
+      "name" : "Strada 4"
+    },
+    {
+      "firstEndId" : 6,
+      "secondEndId" : 7,
+      "speedLimit" : 30,
+      "length" : 8,
+      "name" : "Strada 5"
+    },
+    {
+      "firstEndId" : 7,
+      "secondEndId" : 8,
+      "speedLimit" : 30,
+      "length" : 4,
+      "name" : "Strada 6"
+    },
+    {
+      "firstEndId" : 0,
+      "secondEndId" : 3,
+      "speedLimit" : 50,
+      "length" : 7,
+      "name" : "Strada 7"
+    },
+    {
+      "firstEndId" : 3,
+      "secondEndId" : 6,
+      "speedLimit" : 50,
+      "length" : 2,
+      "name" : "Strada 8"
+    },
+    {
+      "firstEndId" : 1,
+      "secondEndId" : 4,
+      "speedLimit" : 60,
+      "length" : 9,
+      "name" : "Strada 9"
+    },
+    {
+      "firstEndId" : 4,
+      "secondEndId" : 7,
+      "speedLimit" : 60,
+      "length" : 5,
+      "name" : "Strada 10"
+    },
+    {
+      "firstEndId" : 2,
+      "secondEndId" : 5,
+      "speedLimit" : 90,
+      "length" : 3,
+      "name" : "Strada 11"
+    },
+    {
+      "firstEndId" : 5,
+      "secondEndId" : 8,
+      "speedLimit" : 90,
+      "length" : 15,
+      "name" : "Strada 12"
+    }
+  ]
+}

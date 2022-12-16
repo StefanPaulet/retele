@@ -45,13 +45,16 @@ public:
     [[nodiscard]] auto initialize_connection () -> bool;
 
 public:
+    [[nodiscard]] auto initialize_movementControllingThread () -> bool;
+
+public:
+    static auto wait_position_initialization () -> void;
+
+public:
     [[nodiscard]] auto initialize_pingingThreads () -> bool;
 
 public:
     [[nodiscard]] auto initialize_consoleOutputThread () -> bool;
-
-public:
-    [[nodiscard]] auto initialize_movementControllingThread () -> bool;
 
 public:
     auto client_main () -> void;
