@@ -50,9 +50,7 @@ Graph :: Graph() {
 }
 
 
-auto constexpr Graph :: getStreet (
-        int const & streetId
-    ) -> Edge * {
+auto constexpr Graph :: getStreet ( int const & streetId ) -> Edge * {
 
     return this->_pEdgeList [ streetId ];
 }
@@ -67,6 +65,59 @@ auto constexpr Graph :: getEdgeCount () const -> uint16 {
 auto constexpr Graph :: getNodeCount () const -> uint16 {
 
     return this->_nodeCount;
+}
+
+
+auto Graph :: bfsTraversal (
+        uint16              streetId,
+        const std :: function < bool ( Node const * ) > & predicate
+) -> std :: list < Node const * > * {
+
+    auto pNodeQueue = new std :: queue < Node const * >;
+    auto pResultList = new std :: list < Node const * >;
+
+    bool * visited = new bool [ this->_nodeCount ];
+
+    int * distanceTraveled = new int [ this->_nodeCount ];
+    bool resultFound = false;
+
+    pNodeQueue->push ( this->_pEdgeList [ streetId ]->getEndNodes().first );
+    visited [ this->_pEdgeList [ streetId ]->getEndNodes().first->getId() ] = true;
+
+    pNodeQueue->push ( this->_pEdgeList [ streetId ]->getEndNodes().second );
+    visited [ this->_pEdgeList [ streetId ]->getEndNodes().second->getId() ] = true;
+
+    while ( ! pNodeQueue->empty() ) {
+        auto currentNode = pNodeQueue->front();
+        pNodeQueue->pop();
+
+        if ( predicate ( currentNode ) ) {
+            pResultList->push_back ( currentNode );
+            resultFound = true;
+        }
+
+        if ( ! resultFound || distanceTraveled [ currentNode->getId() ] < 10 ) {
+            for ( auto & e : * currentNode->getStreetList() ) {
+
+                auto currentNeighbour = (
+                        currentNode->getId() == e->getEndNodes().first->getId() ?
+                        e->getEndNodes().second :
+                        e->getEndNodes().first
+                    );
+                if ( ! visited [ currentNeighbour->getId() ] ) {
+                    visited [ currentNeighbour->getId() ] = true;
+                    distanceTraveled [ currentNeighbour->getId() ] = distanceTraveled [ currentNode->getId() ] + 1;
+                    pNodeQueue->push ( currentNeighbour );
+                }
+            }
+        }
+    }
+
+    delete[] visited;
+    delete[] distanceTraveled;
+    delete pNodeQueue;
+
+    return pResultList;
 }
 
 #endif //CONCURRENT_SV_GRAPH_IMPL_HPP

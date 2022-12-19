@@ -12,22 +12,16 @@ class Edge {
 private:
     uint16 _id;
 
-private:
     std :: pair < Node const *, Node const * > _endNodes;
 
-private:
     uint8 _maxSpeed { 30 };
 
-private:
     uint8 _length;
 
-private:
     std :: string _name;
 
-private:
     bool _traffic_jam { false };
 
-private:
     bool _roadblock { false };
 
 public:
@@ -47,38 +41,26 @@ public:
 
     }
 
-
-public:
     [[nodiscard]] constexpr auto getId () const -> uint16;
 
-public:
     [[nodiscard]] constexpr auto getEndNodes () const -> std :: pair < Node const *, Node const * >;
 
-public:
     [[nodiscard]] constexpr auto getLength () const -> uint8;
 
-public:
     [[nodiscard]] constexpr auto getMaxSpeed () const -> uint8;
 
-public:
     [[nodiscard]] auto getName () const -> std :: string;
 
-public:
     [[nodiscard]] auto isJammed () const -> bool;
 
-public:
     [[nodiscard]] auto isBlocked () const -> bool;
 
-public:
     auto signal_traffic_jam () -> void;
 
-public:
     auto signal_roadblock () -> void;
 
-public:
     auto remove_traffic_jam () -> void;
 
-public:
     auto remove_roadblock () -> void;
 };
 

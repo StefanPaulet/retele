@@ -6,6 +6,8 @@
 #define CONCURRENT_SV_GRAPH_HPP
 
 #include "Edge.hpp"
+#include <queue>
+#include <functional>
 #include <CDS/util/JSON>
 #include <CDS/filesystem/Path>
 
@@ -14,28 +16,25 @@ class Graph {
 private:
     uint16 _nodeCount;
 
-private:
     uint16 _edgeCount;
 
-private:
     Node * * _pNodeList;
 
-private:
     Edge * * _pEdgeList;
 
 public:
     Graph();
 
-public:
-    auto constexpr getStreet (
-            int const & streetId
-    ) -> Edge * ;
+    auto constexpr getStreet ( int const & streetId ) -> Edge * ;
 
-public:
     [[nodiscard]] auto constexpr getEdgeCount () const -> uint16;
 
-public:
     [[nodiscard]] auto constexpr getNodeCount () const -> uint16;
+
+    auto bfsTraversal (
+            uint16              streetId,
+            const std :: function < bool ( Node const * ) > & predicate
+    ) -> std :: list < Node const * > *;
 };
 
 #include "impl/Edge.hpp"

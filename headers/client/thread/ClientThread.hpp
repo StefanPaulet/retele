@@ -42,8 +42,7 @@ auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserve
             { __TIMED_EVENTS_UPDATE, 1 },
             { __TIMED_SPEED_LIMIT_UPDATE, 5 },
             { __TIMED_EVENT_STILL_PRESENT, 10 },
-            { __TIMED_SPORTS_UPDATE, 60 },
-            { __TIMED_WEATHER_UPDATE, 60 }
+            { __TIMED_SPORTS_UPDATE, 60 }
     };
 
     auto clientFd = reinterpret_cast < AtomicSocket * > ( param );
@@ -71,7 +70,7 @@ auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserve
 auto _movement_main ( void * param ) -> void * {        /* NOLINT(bugprone-reserved-identifier) */
 
     auto serverFd = reinterpret_cast < AtomicSocket * > ( param );
-    auto movingVehicle = new MovingVehicle;
+    auto movingVehicle = std :: make_unique < MovingVehicle >();
 
     {
         std :: unique_lock lk ( Client :: conditionMutex );

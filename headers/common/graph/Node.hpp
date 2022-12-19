@@ -12,10 +12,8 @@ class Node {
 private:        /* NOLINT(readability-redundant-access-specifiers) */
     uint16 _id;
 
-private:        /* NOLINT(readability-redundant-access-specifiers) */
     bool _gas_station;
 
-private:        /* NOLINT(readability-redundant-access-specifiers) */
     std :: unique_ptr < std :: list < Edge * > > _pIncidentStreetList = std :: make_unique < std :: list < Edge * > > ();
 
 public:         /* NOLINT(readability-redundant-access-specifiers) */

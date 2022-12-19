@@ -15,19 +15,18 @@ enum CommandIDs : sint16 {
     __BAD_REQUEST            = 0,          /* NOLINT(bugprone-reserved-identifier) */
     __NO_PARAM_REQUEST       = -1,         /* NOLINT(bugprone-reserved-identifier) */
     __SIGNAL                 = 20,         /* NOLINT(bugprone-reserved-identifier) */
-    __GET_GP                 = 21,         /* NOLINT(bugprone-reserved-identifier) */
+    __GET_GS                 = 21,         /* NOLINT(bugprone-reserved-identifier) */
     __ENABLE_SPORTS          = 22,         /* NOLINT(bugprone-reserved-identifier) */
-    __ENABLE_WEATHER         = 23,         /* NOLINT(bugprone-reserved-identifier) */
+    __GET_WEATHER            = 23,         /* NOLINT(bugprone-reserved-identifier) */
     __EXIT                   = 99,         /* NOLINT(bugprone-reserved-identifier) */
 
 
     __TIMED_EVENTS_UPDATE         = 1,      /* NOLINT(bugprone-reserved-identifier) */
     __TIMED_SPORTS_UPDATE         = 2,      /* NOLINT(bugprone-reserved-identifier) */
-    __TIMED_WEATHER_UPDATE        = 3,      /* NOLINT(bugprone-reserved-identifier) */
-    __TIMED_SPEED_UPDATE          = 4,      /* NOLINT(bugprone-reserved-identifier) */
-    __TIMED_SPEED_LIMIT_UPDATE    = 5,      /* NOLINT(bugprone-reserved-identifier) */
-    __TIMED_EVENT_STILL_PRESENT   = 6,      /* NOLINT(bugprone-reserved-identifier) */
-    __TIMED_POSITION_UPDATE       = 7,      /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_SPEED_UPDATE          = 3,      /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_SPEED_LIMIT_UPDATE    = 4,      /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_EVENT_STILL_PRESENT   = 5,      /* NOLINT(bugprone-reserved-identifier) */
+    __TIMED_POSITION_UPDATE       = 6,      /* NOLINT(bugprone-reserved-identifier) */
 
     __INITIALIZING_POSITION_REQUEST = 9000,     /* NOLINT(bugprone-reserved-identifier) */
     __INITIALIZING_SPEED_REQUEST    = 9001,     /* NOLINT(bugprone-reserved-identifier) */

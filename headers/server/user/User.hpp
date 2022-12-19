@@ -6,72 +6,83 @@
 #define CONCURRENT_SV_USER_HPP
 
 #include <AtomicQueue>
-#include <memory>
+#include <CDS/util/JSON>
+#include <random>
 #include <array>
+#include <chrono>
 #include "../../common/graph/Graph.hpp"
 #include "../../common/vehicle/Vehicle.hpp"
+#include "../../common/randomGenerator/RandomGenerator.hpp"
 
 class User {
 
 private:
     static AtomicQueue * pEventQueue;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     static Graph * pGraph;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
+    static RandomGenerator randomGenerator;
+
     static std :: array < std :: string, 6 > const signalNamesArray;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
+    struct CommonWeather {
+        uint8 commonChoice = 0;
+        std :: unique_ptr < std :: vector < std :: string const * > > pWeatherString = std :: make_unique < std :: vector < std :: string const * > > ();
+
+        CommonWeather();
+        ~CommonWeather();
+    };
+    static CommonWeather * pCommonWeather;
+
     friend auto _queue_supervisor_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
      AtomicQueue :: QueueNode _pLocalEventNode { pEventQueue->front() };
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     int _client_fd;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     Vehicle _userPosition { 30, 0 };
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     uint8 _waiting_response { 0 };
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
+public:
     explicit User ( int clientFd ) :
         _client_fd ( clientFd ) {
 
+        auto newWeather = randomGenerator.getRandomInRange ( ( uint8 ) 15 );
+        if ( newWeather == 0 ) {
+            auto oldWeather = pCommonWeather->commonChoice;
+            while ( pCommonWeather->commonChoice == oldWeather ) {
+                pCommonWeather->commonChoice = randomGenerator.getRandomInRange ( ( uint8 ) pCommonWeather->pWeatherString->size() );
+            }
+        }
     };
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
+private:
     auto send_msg ( std :: string const & message ) const -> void;
 
-private:
     auto receive_initial_data () -> bool;
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
+public:
     auto handle_request () -> void;
 
-private:     /* NOLINT(readability-redundant-access-specifiers) */
+private:
     auto handle_signal () -> void;
 
-private:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_event_update () -> void;
 
-private:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_speed_limit_update () -> void;
 
-private:     /* NOLINT(readability-redundant-access-specifiers) */
     auto handle_event_removal () -> void;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     auto remove_street_event ( uint8 eventType ) const -> void;
 
-private:
     auto handle_position_update () -> void;
 
-private:
     auto handle_speed_update () -> void;
+
+    auto handle_get_weather () -> void;
+
+    auto handle_get_gas_stations () -> void;
 };
 
 #include "../../common/vehicle/impl/Vehicle.hpp"        /* NOLINT(llvm-include-order) */

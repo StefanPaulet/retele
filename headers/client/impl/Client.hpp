@@ -7,11 +7,11 @@
 
 
 /// Command map used to quickly find name -> command_nr association
-const std :: map < std :: string, int > Client :: command_map = {
+const std :: map < std :: string, sint16 > Client :: command_map = {
         { "signal",              __SIGNAL   },
-        { "get-gas-price",       __GET_GP   },
+        { "get-gas-stations",       __GET_GS   },
         { "enable-sport-news",   __ENABLE_SPORTS },
-        { "enable-weather-news", __ENABLE_WEATHER },
+        { "get-weather-news",    __GET_WEATHER },
         { "quit",                __EXIT },
         { "n",                   __EVENT_MISSING }
 
@@ -115,18 +115,16 @@ auto Client :: client_main () -> void {
 
         bool hasParams = split_param ( buffer, p_aux );
 
-        int request_code = command_map.find( buffer )->second;
+        sint16 request_code = command_map.find( buffer )->second;
 
         if ( request_code == __SIGNAL && ! hasParams ) {
             request_code = __NO_PARAM_REQUEST;
-        }
-
-        if ( request_code != __SIGNAL && hasParams ) {
+        } else if ( request_code != __SIGNAL && hasParams ) {
             request_code = __BAD_REQUEST;
             p_aux = nullptr;
         }
 
-        if ( -1 == this->_server_fd.write( & request_code, sizeof ( int ), p_aux, __STANDARD_BUFFER_SIZE ) ) {
+        if ( -1 == this->_server_fd.write( & request_code, sizeof ( request_code ), p_aux, __STANDARD_BUFFER_SIZE ) ) {
             if ( errno == EPIPE ) {
                 perror ( "Fatal error: Sending request to server problem" );
                 exit ( EXIT_FAILURE );

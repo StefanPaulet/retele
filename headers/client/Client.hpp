@@ -10,7 +10,7 @@
 class Client {
 
 private:
-    static const std :: map < std :: string, int > command_map;
+    static const std :: map < std :: string, sint16 > command_map;
 
 private:
     static std :: mutex conditionMutex;

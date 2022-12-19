@@ -1,0 +1,56 @@
+{
+    "summer" : [
+      {
+        "temperature" : 30,
+        "rainChance" : 10,
+        "sky" : "sunny",
+        "other" : ""
+      },
+      {
+        "temperature" : 26,
+        "rainChance" : 50,
+        "sky" : "clouded",
+        "other" : "fog"
+      },
+      {
+        "temperature" : 22,
+        "rainChance" : 90,
+        "sky" : "fully clouded",
+        "other" : ""
+      }
+    ],
+    "winter" : [
+      {
+        "temperature" : 8,
+        "rainChance" : 70,
+        "sky" : "partially clouded",
+        "other" : "fog"
+      },
+      {
+        "temperature" : 2,
+        "rainChance" : 10,
+        "sky" : "clouded",
+        "other" : ""
+      },
+      {
+        "temperature" : 0,
+        "rainChance" : 0,
+        "sky" : "fully clouded",
+        "other" : "snow"
+      }
+    ],
+    "normal" : [
+      {
+        "temperature" : 15,
+        "rainChance" : 34,
+        "sky" : "clouded",
+        "other" : ""
+      },
+      {
+        "temperature" : 25,
+        "rainChance" : 8,
+        "sky" : "sunny",
+        "other" : "heavy wind"
+      }
+    ]
+}

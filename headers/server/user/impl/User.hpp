@@ -5,9 +5,11 @@
 #ifndef CONCURRENT_SV_USER_IMPL_HPP
 #define CONCURRENT_SV_USER_IMPL_HPP
 
-AtomicQueue * User :: pEventQueue = new AtomicQueue ();
+auto User :: pEventQueue = new AtomicQueue ();
 
-Graph * User :: pGraph = new Graph ();
+auto User :: pGraph = new Graph ();
+
+RandomGenerator User :: randomGenerator { };
 
 std :: array < std :: string, 6 > const User :: signalNamesArray {
     "roadblock",
@@ -17,6 +19,86 @@ std :: array < std :: string, 6 > const User :: signalNamesArray {
     "frozen-ground",
     "crowded"
 };
+
+User :: CommonWeather :: CommonWeather() {
+
+    std :: string currentSeason;
+
+    {
+        time_t rawTime;
+        struct tm * pInfo;
+        char buffer [ 4 ];
+
+        time ( & rawTime );
+        pInfo = localtime ( & rawTime );
+
+        strftime ( buffer, 128, "%m", pInfo );
+
+        auto seasonNr = strtol ( buffer, nullptr, 10 );
+
+        switch ( seasonNr ) {
+            case 12:
+            case 1:
+            case 2: {
+                currentSeason = "winter";
+                break;
+            }
+            case 6:
+            case 7:
+            case 8: {
+                currentSeason = "summer";
+                break;
+            }
+
+            default: {
+                currentSeason = "normal";
+            }
+        }
+    }
+
+    cds :: json :: JsonObject jsonData;
+
+    {
+        cds :: String mapPathString = cds :: filesystem :: Path ( __COMMON_LIBS_PATH ).parent().parent() / "resources/weather.json";
+        auto mapPathStringLiteral = mapPathString.cStr();
+        std :: stringstream iss;
+        iss << std :: ifstream ( mapPathStringLiteral ).rdbuf();
+
+        jsonData = cds :: json :: parseJson ( iss.str() );
+    }
+
+    for ( auto & e : jsonData.getArray ( currentSeason ) ) {
+
+        auto aux = e.getJson();
+
+        std :: string weatherNews ( "Temperature: " + std :: to_string ( aux.getInt ( "temperature" ) ) );
+        weatherNews +=
+                "\nRain chance: " + std :: to_string ( aux.getInt ( "rainChance" ) ) +
+                "\nThe sky will be: " + aux.getString ( "sky" ) + "\n";
+        if ( !aux.getString ( "other" ).empty() ) {
+            weatherNews += "Careful! There might be " + aux.getString ( "other" ) + "\n";
+        }
+
+        this->pWeatherString->push_back ( new std :: string ( weatherNews ) );
+
+    }
+
+    this->commonChoice = randomGenerator.getRandomInRange ( ( uint8 ) this->pWeatherString->size() );
+
+}
+
+User :: CommonWeather :: ~CommonWeather () {
+
+    for ( auto & e : * this->pWeatherString ) {
+        delete e;
+    }
+    this->pWeatherString.reset();
+
+}
+
+auto User :: pCommonWeather = new CommonWeather;
+
+
 
 
 auto User :: send_msg ( std :: string const & message ) const -> void {
@@ -84,11 +166,7 @@ auto User :: handle_request () -> void {
             break;
         }
 
-//        printf ( "Client sent %d\n", request_nr );
-
         switch ( request_nr ) {
-
-
             case __NO_PARAM_REQUEST : {
                 this->send_msg ( "Command must have parameters\n" );
                 break;
@@ -123,8 +201,15 @@ auto User :: handle_request () -> void {
                 this->handle_speed_update();
                 break;
             }
-            case __TIMED_SPORTS_UPDATE :
-            case __TIMED_WEATHER_UPDATE : {
+            case __GET_WEATHER : {
+                this->handle_get_weather();
+                break;
+            }
+            case __GET_GS : {
+                this->handle_get_gas_stations();
+                break;
+            }
+            case __TIMED_SPORTS_UPDATE : {
                 break;
             }
             case __EVENT_MISSING : {
@@ -253,6 +338,40 @@ auto User :: handle_speed_update () -> void {
         return;
     }
     this->_userPosition.setSpeed ( newSpeed );
+}
+
+
+auto User :: handle_get_weather () -> void {
+
+    this->send_msg ( * ( * pCommonWeather->pWeatherString ) [ pCommonWeather->commonChoice ] );
+}
+
+
+auto User :: handle_get_gas_stations () -> void {
+
+    auto pResults = pGraph->bfsTraversal (
+            this->_userPosition.getStreetId(),
+            & Node :: isGasStation
+    );
+
+    if ( pResults->empty() ) {
+        this->send_msg ( "Sorry, we couldn't find what you needed in your vicinity\n" );
+    } else {
+        std :: string resultString { "We found what you need at:\n"};
+        for ( auto & e : * pResults ) {
+            auto firstStreet = e->getStreetList()->begin();
+            auto secondStreet = firstStreet ++;
+            if ( ( * firstStreet )->getName() == ( * secondStreet )->getName() ) {
+                ++ firstStreet;
+            }
+            resultString +=
+                    "The intersection of streets " + ( * firstStreet )->getName() +
+                    " and " + ( * secondStreet )->getName() + "\n";
+        }
+        this->send_msg ( resultString );
+    }
+
+    delete pResults;
 }
 
 #endif //CONCURRENT_SV_USER_IMPL_HPP
