@@ -7,14 +7,12 @@
 
 #include <string>
 #include <memory>
-#include <mutex>
 
 class AtomicQueue {
 
 private:    /* NOLINT(readability-redundant-access-specifiers) */
     friend class User;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     struct SharedNode {
 
         std :: string                    _message;
@@ -32,35 +30,29 @@ private:    /* NOLINT(readability-redundant-access-specifiers) */
         }
     };
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     using QueueNode = std :: shared_ptr < SharedNode >;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     QueueNode _pFront;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     QueueNode _pBack;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     std :: mutex _back_lock;
 
-private:    /* NOLINT(readability-redundant-access-specifiers) */
     std :: mutex _front_lock;
 
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
+public:
     constexpr AtomicQueue () {
         this->_pFront = this->_pBack = std :: make_shared < SharedNode > ();
     }
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto back () -> QueueNode const & {
 
         std :: lock_guard lock ( this->_back_lock );
         return this->_pBack;
     }
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
+
     auto front () -> QueueNode const & {
 
         std :: lock_guard lock ( this->_front_lock );
@@ -68,8 +60,7 @@ public:     /* NOLINT(readability-redundant-access-specifiers) */
     }
 
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
-    auto push_back ( std :: string && message ) {
+    auto push_back ( std :: string && message ) -> void {
 
         std :: lock_guard lock ( this->_back_lock );
 
@@ -81,8 +72,7 @@ public:     /* NOLINT(readability-redundant-access-specifiers) */
     }
 
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
-    auto pop_front () {
+    auto pop_front () -> void {
 
         std :: lock_guard lock ( this->_front_lock );
 

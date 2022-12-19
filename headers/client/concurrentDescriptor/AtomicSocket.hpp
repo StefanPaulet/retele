@@ -10,7 +10,6 @@ class AtomicSocket {
 private:
     int _fd { 0 };
 
-private:
     std :: mutex _descriptor_lock;
 
 public:
@@ -20,27 +19,25 @@ public:
 
     }
 
-public:
     auto operator= ( int const & fd ) -> int & {
 
         this->_fd = fd;
         return this->_fd;
     }
 
-public:
+
     explicit operator int () const {
 
         return this->_fd;
     }
 
-public:
+
     auto write (
             void const * message,
             uint16 length,
             void const * param = nullptr,
             uint16 paramLength = 0
     ) -> sint64 {
-
 
         std :: lock_guard lock ( this->_descriptor_lock );
         auto result = :: write ( this->_fd, message, length );
@@ -55,7 +52,7 @@ public:
         return result;
     }
 
-public:
+
     auto read (
             void * message,
             uint16 length

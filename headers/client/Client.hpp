@@ -5,59 +5,52 @@
 #ifndef CONCURRENT_SV_CLIENT_HPP
 #define CONCURRENT_SV_CLIENT_HPP
 
+#include <map>
+#include <string>
+#include <mutex>
+#include <condition_variable>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 #include "concurrentDescriptor/AtomicSocket.hpp"
 
 class Client {
 
 private:
-    static const std :: map < std :: string, sint16 > command_map;
+    static const std :: map < std :: string, sint16 > commandMap;
 
-private:
     static std :: mutex conditionMutex;
 
-private:
     static std :: condition_variable conditionVariable;
 
-private:
     static bool serverInformed;
 
-    friend auto _movement_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
-
-private:
     sockaddr_in _server_info { };
 
-private:
     AtomicSocket _server_fd { 0 };
 
-private:
     pthread_t _writer_thread { };
 
-private:
     pthread_t _pinging_thread { };
 
-private:
     pthread_t _movement_controlling_thread { };
+
+    friend auto _movement_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
 
 public:
     Client();
 
-public:
-    [[nodiscard]] auto initialize_connection () -> bool;
+    [[nodiscard]] auto initializeConnection () -> bool;
 
-public:
-    [[nodiscard]] auto initialize_movementControllingThread () -> bool;
+    [[nodiscard]] auto initializeMovementControllingThread () -> bool;
 
-public:
-    static auto wait_position_initialization () -> void;
+    static auto waitPositionInitialization () -> void;
 
-public:
-    [[nodiscard]] auto initialize_pingingThreads () -> bool;
+    [[nodiscard]] auto initializePingingThreads () -> bool;
 
-public:
-    [[nodiscard]] auto initialize_consoleOutputThread () -> bool;
+    [[nodiscard]] auto initializeConsoleOutputThread () -> bool;
 
-public:
-    auto client_main () -> void;
+    auto clientMain () -> void;
 };
 
 

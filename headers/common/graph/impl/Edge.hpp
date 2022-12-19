@@ -13,7 +13,7 @@ constexpr auto Edge :: getId () const -> uint16 {
 
 constexpr auto Edge :: getEndNodes () const -> std :: pair < Node const *, Node const * > {
 
-    return this->_endNodes;
+    return this->_end_nodes;
 }
 
 
@@ -26,10 +26,10 @@ constexpr auto Edge :: getLength () const -> uint8 {
 constexpr auto Edge :: getMaxSpeed () const -> uint8 {
 
     if ( this->_roadblock )
-        return this->_maxSpeed - 20;
+        return this->_max_speed - 20;
     if ( this->_traffic_jam )
-        return this->_maxSpeed - 10;
-    return this->_maxSpeed;
+        return this->_max_speed - 10;
+    return this->_max_speed;
 }
 
 
@@ -51,25 +51,25 @@ auto Edge :: isBlocked () const -> bool {
 }
 
 
-auto Edge :: signal_traffic_jam () -> void {
+auto Edge :: signalTrafficJam () -> void {
 
     this->_traffic_jam = true;
 }
 
 
-auto Edge :: signal_roadblock () -> void {
+auto Edge :: signalRoadblock () -> void {
 
     this->_roadblock = true;
 }
 
 
-auto Edge :: remove_traffic_jam () -> void {
+auto Edge :: removeTrafficJam () -> void {
 
     this->_traffic_jam = false;
 }
 
 
-auto Edge :: remove_roadblock () -> void {
+auto Edge :: removeRoadblock () -> void {
 
     this->_roadblock = false;
 }

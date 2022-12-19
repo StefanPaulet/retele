@@ -128,7 +128,7 @@ auto User :: pCommonWeather = new CommonWeather;
 
 
 
-auto User :: send_msg ( std :: string const & message ) const -> void {
+auto User :: sendMessage ( std :: string const & message ) const -> void {
 
     auto messageSize = message.size();
 
@@ -137,7 +137,7 @@ auto User :: send_msg ( std :: string const & message ) const -> void {
 }
 
 
-auto User :: receive_initial_data () -> bool {
+auto User :: receiveInitialData () -> bool {
 
     sint16 request_nr;
     uint16 recv_position;
@@ -177,12 +177,12 @@ auto User :: receive_initial_data () -> bool {
 }
 
 
-auto User :: handle_request () -> void {
+auto User :: handleRequest () -> void {
 
     bool clientConnected = true;
     sint16 request_nr;
 
-    if ( ! this->receive_initial_data() ) {
+    if ( ! this->receiveInitialData() ) {
         pthread_cancel ( pthread_self() );
         return;
     }
@@ -195,45 +195,45 @@ auto User :: handle_request () -> void {
 
         switch ( request_nr ) {
             case __NO_PARAM_REQUEST : {
-                this->send_msg ( "Command must have parameters\n" );
+                this->sendMessage ( "Command must have parameters\n" );
                 break;
             }
             case __SIGNAL : {
-                this->handle_signal();
+                this->handleSignal();
                 break;
             }
             case __EXIT : {
-                this->send_msg ( "Bye bye\n" );
+                this->sendMessage ( "Bye bye\n" );
                 clientConnected = false;
                 break;
             }
             case __TIMED_EVENTS_UPDATE : {
-                this->handle_event_update();
+                this->handleEventUpdate();
                 break;
             }
             case __TIMED_SPEED_LIMIT_UPDATE : {
-                this->handle_speed_limit_update();
+                this->handleSpeedLimitUpdate();
                 break;
             }
             case __TIMED_EVENT_STILL_PRESENT : {
-                this->handle_event_removal();
+                this->handleEventRemoval();
                 break;
 
             }
             case __TIMED_POSITION_UPDATE : {
-                this->handle_position_update();
+                this->handlePositionUpdate();
                 break;
             }
             case __TIMED_SPEED_UPDATE : {
-                this->handle_speed_update();
+                this->handleSpeedUpdate();
                 break;
             }
             case __GET_WEATHER : {
-                this->handle_get_weather();
+                this->handleGetWeather();
                 break;
             }
             case __GET_GS : {
-                this->handle_get_gas_stations();
+                this->handleGetGasStations();
                 break;
             }
             case __TIMED_SPORTS_UPDATE : {
@@ -241,24 +241,24 @@ auto User :: handle_request () -> void {
             }
             case __EVENT_MISSING : {
                 if ( this->_event_removal_pair.first > 0 ) {
-                    this->remove_street_event ( this->_event_removal_pair.first );
+                    this->handleStreetEvent ( this->_event_removal_pair.first );
                     break;
                 }
             }
             default : {
-                this->send_msg ( "No such command available\n" );
+                this->sendMessage ( "No such command available\n" );
                 break;
             }
         }
 
     }
 
-    Server :: getInstance ()->disconnect_client ( pthread_self() );
+    Server :: getInstance ()->disconnectClient ( pthread_self() );
 
 }
 
 
-auto User :: handle_signal () -> void {
+auto User :: handleSignal () -> void {
 
     char buffer [ __STANDARD_BUFFER_SIZE ];
     if ( 0 >= read ( this->_client_fd, buffer, __STANDARD_BUFFER_SIZE ) ) {
@@ -271,7 +271,7 @@ auto User :: handle_signal () -> void {
     for ( auto & e : signalNamesArray ) {
         if ( e == stringedBuffer ) {
 
-            this->send_msg ( "Thank you for your signal\n" );
+            this->sendMessage ( "Thank you for your signal\n" );
 
             stringedBuffer += " on " + userStreet->getName() + "\n";
 
@@ -280,13 +280,13 @@ auto User :: handle_signal () -> void {
             if ( e == "roadblock" ) {
 //                printf ( "Roadblock on street %s signaled\n", userStreet->getName().c_str() );
                 if ( userStreet->isJammed() ) {
-                    userStreet->remove_traffic_jam ();
+                    userStreet->removeTrafficJam ();
                 }
-                userStreet->signal_roadblock();
+                userStreet->signalRoadblock();
             } else {
                 if ( e != "police" && ! userStreet->isBlocked() ) {
 //                    printf ( "Traffic jam on street %s signaled\n", userStreet->getName().c_str() );
-                    pGraph->getStreet ( this->_userPosition.getStreetId() )->signal_traffic_jam();
+                    pGraph->getStreet ( this->_userPosition.getStreetId() )->signalTrafficJam();
                 }
             }
 
@@ -294,33 +294,33 @@ auto User :: handle_signal () -> void {
         }
     }
 
-    this->send_msg ( "Sorry, no such signal available\n" );
+    this->sendMessage ( "Sorry, no such signal available\n" );
 
 }
 
 
-auto User :: handle_event_update () -> void {
+auto User :: handleEventUpdate () -> void {
 
     if ( this->_pLocalEventNode != pEventQueue->back() ) {
         std :: string event = "Attention: " + this->_pLocalEventNode->_message;
-        this->send_msg ( event );
+        this->sendMessage ( event );
         this->_pLocalEventNode = this->_pLocalEventNode->_pNext;
     }
 }
 
 
-auto User :: handle_speed_limit_update () -> void {
+auto User :: handleSpeedLimitUpdate () -> void {
 
     auto speedLimit = pGraph->getStreet ( this->_userPosition.getStreetId() )->getMaxSpeed();
     if ( speedLimit < this->_userPosition.getSpeed() ) {
-        this->send_msg (
+        this->sendMessage (
                 "Careful! Speed limit is " + std :: to_string ( speedLimit ) + "\n"
             );
     }
 }
 
 
-auto User :: handle_event_removal () -> void {
+auto User :: handleEventRemoval () -> void {
 
     this->_event_removal_pair.first = 0;
 
@@ -328,31 +328,31 @@ auto User :: handle_event_removal () -> void {
     this->_event_removal_pair.second = this->_userPosition.getStreetId();
 
     if ( userStreet->isBlocked() ) {
-        this->send_msg ( "Roadblock signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
+        this->sendMessage ( "Roadblock signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
         this->_event_removal_pair.first = 1;
     } else {
         if ( userStreet->isJammed() ) {
-            this->send_msg ( "Traffic jam signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
+            this->sendMessage ( "Traffic jam signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
             this->_event_removal_pair.first = 2;
         }
     }
 }
 
 
-auto User :: remove_street_event ( uint8 eventType ) const -> void {
+auto User :: handleStreetEvent ( uint8 eventType ) const -> void {
 
     if ( eventType == 1 ) {
 //        printf ( "Roadblock on street %s removed\n", pGraph->getStreet ( this->_event_removal_pair.second )->getName().c_str() );
-        pGraph->getStreet ( this->_event_removal_pair.second )->remove_roadblock();
+        pGraph->getStreet ( this->_event_removal_pair.second )->removeRoadblock();
     } else if ( eventType == 2 ) {
 //        printf ( "Traffic jam on street %s removed\n", pGraph->getStreet ( this->_event_removal_pair.second )->getName().c_str() );
-        pGraph->getStreet ( this->_event_removal_pair.second )->remove_traffic_jam();
+        pGraph->getStreet ( this->_event_removal_pair.second )->removeTrafficJam();
     }
-    this->send_msg ( "Thank you! Problem removed\n" );
+    this->sendMessage ( "Thank you! Problem removed\n" );
 }
 
 
-auto User :: handle_position_update () -> void {
+auto User :: handlePositionUpdate () -> void {
 
     uint16 newPosition;
     if ( 0 >= read ( this->_client_fd, & newPosition, sizeof ( newPosition ) ) ) {
@@ -364,7 +364,7 @@ auto User :: handle_position_update () -> void {
 }
 
 
-auto User :: handle_speed_update () -> void {
+auto User :: handleSpeedUpdate () -> void {
 
     uint8 newSpeed;
     if ( 0 >= read ( this->_client_fd, & newSpeed, sizeof ( newSpeed ) ) ) {
@@ -374,13 +374,13 @@ auto User :: handle_speed_update () -> void {
 }
 
 
-auto User :: handle_get_weather () -> void {
+auto User :: handleGetWeather () -> void {
 
-    this->send_msg ( * ( * pCommonWeather->pWeatherString ) [ pCommonWeather->commonChoice ] );
+    this->sendMessage ( * ( * pCommonWeather->pWeatherString ) [ pCommonWeather->commonChoice ] );
 }
 
 
-auto User :: handle_get_gas_stations () -> void {
+auto User :: handleGetGasStations () -> void {
 
     auto pResults = pGraph->bfsTraversal (
             this->_userPosition.getStreetId(),
@@ -388,7 +388,7 @@ auto User :: handle_get_gas_stations () -> void {
     );
 
     if ( pResults->empty() ) {
-        this->send_msg ( "Sorry, we couldn't find what you needed in your vicinity\n" );
+        this->sendMessage ( "Sorry, we couldn't find what you needed in your vicinity\n" );
     } else {
         std :: string resultString { "We found what you need at:\n"};
         for ( auto & e : * pResults ) {
@@ -403,7 +403,7 @@ auto User :: handle_get_gas_stations () -> void {
                     " at the intersection of streets " + ( * firstStreet )->getName() +
                     " and " + ( * secondStreet )->getName() + "\n";
         }
-        this->send_msg ( resultString );
+        this->sendMessage ( resultString );
     }
 
     delete pResults;

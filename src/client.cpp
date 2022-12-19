@@ -11,31 +11,31 @@ int main () {
 
     auto client = new Client;
 
-    if ( ! client->initialize_connection() ) {
+    if ( ! client->initializeConnection() ) {
         perror ( "Fatal error" );
         exit ( EXIT_FAILURE );
     }
 
     printf ( "Connected to server\n" );
 
-    if ( ! client->initialize_movementControllingThread() ) {
+    if ( ! client->initializeMovementControllingThread() ) {
         perror ( "Thread creation error" );
         exit ( EXIT_FAILURE );
     }
 
-    Client :: wait_position_initialization();
+    Client :: waitPositionInitialization();
 
     printf ( "Position has been sent to server\n" );
 
-    if ( ! client->initialize_consoleOutputThread() ) {
+    if ( ! client->initializeConsoleOutputThread() ) {
         perror ( "Thread creation error" );
         exit ( EXIT_FAILURE );
     }
 
-    if ( ! client->initialize_pingingThreads() ) {
+    if ( ! client->initializePingingThreads() ) {
         perror ( "Thread creation error" );
         exit ( EXIT_FAILURE );
     }
 
-    client->client_main();
+    client->clientMain();
 }

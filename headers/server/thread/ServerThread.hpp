@@ -13,7 +13,7 @@ auto _server_main ( void * param ) -> void * {      /* NOLINT(bugprone-reserved-
     int clientFd = * ( int * ) param;
 
     auto user = new User ( clientFd );
-    user->handle_request();
+    user->handleRequest();
 
     pthread_cancel ( pthread_self() );
 

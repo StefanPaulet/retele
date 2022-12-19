@@ -17,7 +17,8 @@ enum CommandIDs : sint16 {
     __SIGNAL                 = 20,         /* NOLINT(bugprone-reserved-identifier) */
     __GET_GS                 = 21,         /* NOLINT(bugprone-reserved-identifier) */
     __ENABLE_SPORTS          = 22,         /* NOLINT(bugprone-reserved-identifier) */
-    __GET_WEATHER            = 23,         /* NOLINT(bugprone-reserved-identifier) */
+    __DISABLE_SPORTS         = 23,         /* NOLINT(bugprone-reserved-identifier) */
+    __GET_WEATHER            = 24,         /* NOLINT(bugprone-reserved-identifier) */
     __EXIT                   = 99,         /* NOLINT(bugprone-reserved-identifier) */
 
 

@@ -13,7 +13,7 @@ constexpr auto Node :: isGasStation () const -> bool {
 
 auto Node :: getStreetList () const -> std :: list < Edge * > * {
 
-    return this->_pIncidentStreetList.get();
+    return this->_pIncident_street_list.get();
 }
 
 
@@ -33,7 +33,7 @@ inline auto Node :: add_incident_street (
         Edge * neighbour
     ) -> void {
 
-    this->_pIncidentStreetList->push_back ( neighbour );
+    this->_pIncident_street_list->push_back ( neighbour );
 }
 
 #endif //CONCURRENT_SV_NODE_IMPL_HPP

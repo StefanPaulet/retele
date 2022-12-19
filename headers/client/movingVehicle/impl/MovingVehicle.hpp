@@ -20,13 +20,13 @@ MovingVehicle :: MovingVehicle () :
         MovingVehicle :: getRandomInRange ( pGraph->getEdgeCount() )
         ) {
 
-    this->_nextNode = MovingVehicle :: pGraph->getStreet ( this->getStreetId() )->getEndNodes().first;
+    this->_pNext_node = MovingVehicle :: pGraph->getStreet ( this->getStreetId() )->getEndNodes().first;
 }
 
 
 auto MovingVehicle :: chooseNextStreet () -> Edge * {
 
-    auto possibleStreets = this->_nextNode->getStreetList();
+    auto possibleStreets = this->_pNext_node->getStreetList();
 
     auto choice = MovingVehicle :: getRandomInRange ( possibleStreets->size() );
 
@@ -47,18 +47,18 @@ auto MovingVehicle :: chooseNextStreet () -> Edge * {
 
 auto MovingVehicle :: moveVehicle () -> void {
 
-    if ( this->_distancePercent >= 1.0f ) {
+    if ( this->_distance_percent >= 1.0f ) {
 
         auto nextStreet = this->chooseNextStreet();
 
-        auto DEBUG_oldNode = this->_nextNode;
+        auto DEBUG_oldNode = this->_pNext_node;
 
         this->setStreetId ( nextStreet->getId() );
 
-        if ( this->_nextNode == nextStreet->getEndNodes().first ) {
-            this->_nextNode = nextStreet->getEndNodes().second;
+        if ( this->_pNext_node == nextStreet->getEndNodes().first ) {
+            this->_pNext_node = nextStreet->getEndNodes().second;
         } else {
-            this->_nextNode = nextStreet->getEndNodes().first;
+            this->_pNext_node = nextStreet->getEndNodes().first;
         }
 
         if ( DEBUG_oldNode != pGraph->getStreet ( this->getStreetId() )->getEndNodes().first &&
@@ -67,13 +67,12 @@ auto MovingVehicle :: moveVehicle () -> void {
 
             exit ( EXIT_FAILURE );
         }
-        this->_distancePercent = 0.0f;
+        this->_distance_percent = 0.0f;
     } else {
 
-        this->_distancePercent = this->_distancePercent + ( float ) (
-                    ( float ) ( this->getSpeed() ) * 0.1f /
+        this->_distance_percent = this->_distance_percent + ( float ) (
+                    ( float ) ( this->getSpeed() ) * 0.01f /
                     ( float ) pGraph->getStreet ( this->getStreetId() )->getLength()
-                    ///TODO: set to 0.01f for immersion
                 );
     }
 }

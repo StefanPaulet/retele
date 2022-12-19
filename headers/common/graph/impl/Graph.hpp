@@ -15,20 +15,20 @@ Graph :: Graph() {
 
     auto jsonData = cds :: json :: parseJson ( iss.str() );
 
-    this->_nodeCount = ( uint16 ) jsonData.getInt ( "nodeCount" );
-    this->_edgeCount = ( uint16 ) jsonData.getInt ( "edgeCount" );
+    this->_node_count = ( uint16 ) jsonData.getInt ( "nodeCount" );
+    this->_edge_count = ( uint16 ) jsonData.getInt ( "edgeCount" );
 
 
-    this->_pNodeList = new Node * [ this->_nodeCount ];
-    this->_pEdgeList = new Edge * [ this->_edgeCount ];
+    this->_pNode_list = new Node * [ this->_node_count ];
+    this->_pEdge_list = new Edge * [ this->_edge_count ];
 
-    for ( uint16 i = 0; i < this->_nodeCount; ++ i ) {
-        this->_pNodeList [ i ] = new Node ( i );
+    for ( uint16 i = 0; i < this->_node_count; ++ i ) {
+        this->_pNode_list [ i ] = new Node ( i );
     }
 
     for ( auto & e : jsonData.getArray ( "gasStations" ) ) {
         int gasStation = e.getJson().getInt ( "id" );
-        this->_pNodeList [ gasStation ]->setGasStation();
+        this->_pNode_list [ gasStation ]->setGasStation();
     }
 
     int i = 0;
@@ -41,9 +41,9 @@ Graph :: Graph() {
         uint8 length       = entry.getInt ( "length" );
         std :: string name = entry.getString ( "name" );
 
-        this->_pEdgeList [ i ] = new Edge ( i, this->_pNodeList [ firstNode ], this->_pNodeList [ secondNode ], speedLimit, length, std :: move ( name ) );
-        this->_pNodeList [ firstNode ]->add_incident_street ( this->_pEdgeList [ i ] );
-        this->_pNodeList [ secondNode ]->add_incident_street ( this->_pEdgeList [ i ] );
+        this->_pEdge_list [ i ] = new Edge ( i, this->_pNode_list [ firstNode ], this->_pNode_list [ secondNode ], speedLimit, length, std :: move ( name ) );
+        this->_pNode_list [ firstNode ]->add_incident_street ( this->_pEdge_list [ i ] );
+        this->_pNode_list [ secondNode ]->add_incident_street ( this->_pEdge_list [ i ] );
 
         i ++;
     }
@@ -52,19 +52,19 @@ Graph :: Graph() {
 
 auto constexpr Graph :: getStreet ( int const & streetId ) -> Edge * {
 
-    return this->_pEdgeList [ streetId ];
+    return this->_pEdge_list [ streetId ];
 }
 
 
 auto constexpr Graph :: getEdgeCount () const -> uint16 {
 
-    return this->_edgeCount;
+    return this->_edge_count;
 }
 
 
 auto constexpr Graph :: getNodeCount () const -> uint16 {
 
-    return this->_nodeCount;
+    return this->_node_count;
 }
 
 
@@ -76,16 +76,16 @@ auto Graph :: bfsTraversal (
     auto pNodeQueue = new std :: queue < Node const * >;
     auto pResultList = new std :: list < Node const * >;
 
-    bool * visited = new bool [ this->_nodeCount ];
+    bool * visited = new bool [ this->_node_count ];
 
-    int * distanceTraveled = new int [ this->_nodeCount ];
+    int * distanceTraveled = new int [ this->_node_count ];
     bool resultFound = false;
 
-    pNodeQueue->push ( this->_pEdgeList [ streetId ]->getEndNodes().first );
-    visited [ this->_pEdgeList [ streetId ]->getEndNodes().first->getId() ] = true;
+    pNodeQueue->push ( this->_pEdge_list [ streetId ]->getEndNodes().first );
+    visited [ this->_pEdge_list [ streetId ]->getEndNodes().first->getId() ] = true;
 
-    pNodeQueue->push ( this->_pEdgeList [ streetId ]->getEndNodes().second );
-    visited [ this->_pEdgeList [ streetId ]->getEndNodes().second->getId() ] = true;
+    pNodeQueue->push ( this->_pEdge_list [ streetId ]->getEndNodes().second );
+    visited [ this->_pEdge_list [ streetId ]->getEndNodes().second->getId() ] = true;
 
     while ( ! pNodeQueue->empty() ) {
         auto currentNode = pNodeQueue->front();

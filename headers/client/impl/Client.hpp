@@ -6,11 +6,11 @@
 #define CONCURRENT_SV_CLIENT_IMPL_HPP
 
 
-/// Command map used to quickly find name -> command_nr association
-const std :: map < std :: string, sint16 > Client :: command_map = {
+const std :: map < std :: string, sint16 > Client :: commandMap = {
         { "signal",              __SIGNAL   },
-        { "get-gas-stations",       __GET_GS   },
+        { "get-gas-stations",    __GET_GS   },
         { "enable-sport-news",   __ENABLE_SPORTS },
+        { "disable-sport-news",  __DISABLE_SPORTS },
         { "get-weather-news",    __GET_WEATHER },
         { "quit",                __EXIT },
         { "n",                   __EVENT_MISSING }
@@ -18,12 +18,12 @@ const std :: map < std :: string, sint16 > Client :: command_map = {
 };
 
 bool Client :: serverInformed = false;
+
 std :: mutex Client :: conditionMutex;
+
 std :: condition_variable Client :: conditionVariable;
 
-/**
- * Client constructor
- */
+
 Client :: Client () {
 
     this->_server_info.sin_family = AF_INET;
@@ -31,11 +31,8 @@ Client :: Client () {
     this->_server_info.sin_addr.s_addr = inet_addr ( "127.0.0.1" );
 }
 
-/**
- * Connection initializer
- * @return bool = function success
- */
-auto Client :: initialize_connection () -> bool {
+
+auto Client :: initializeConnection () -> bool {
 
     if ( -1 == ( this->_server_fd = socket ( AF_INET, SOCK_STREAM, 0 ) ) ) {
         perror ( "Error at socket" );
@@ -52,34 +49,26 @@ auto Client :: initialize_connection () -> bool {
 }
 
 
-auto Client :: initialize_movementControllingThread () -> bool {
+auto Client :: initializeMovementControllingThread () -> bool {
 
     return launch_new_thread ( & _movement_controlling_thread, & _movement_main, ( void * ) ( & this->_server_fd ) );
 }
 
 
-auto Client :: wait_position_initialization () -> void {
+auto Client :: waitPositionInitialization () -> void {
 
     std :: unique_lock lk ( conditionMutex );
     conditionVariable.wait ( lk, []{ return serverInformed; } );
 }
 
 
-/**
- * Initializing thread that handles reads from server => output to console
- * @return bool = function success
- */
-auto Client :: initialize_consoleOutputThread () -> bool {
+auto Client :: initializeConsoleOutputThread () -> bool {
 
     return launch_new_thread ( & _writer_thread, & _console_output_main, ( void * ) ( & this->_server_fd ) );
 }
 
 
-/**
- * Initializing threads that send requests periodically
- * @return bool = function success
- */
-auto Client :: initialize_pingingThreads () -> bool {
+auto Client :: initializePingingThreads () -> bool {
 
     bool returnResult = launch_new_thread (  & _pinging_thread, & _pinging_main, ( void * ) ( & this->_server_fd ) );
     sleep ( 1 );
@@ -87,10 +76,7 @@ auto Client :: initialize_pingingThreads () -> bool {
 }
 
 
-/**
- * Main function of client; handles console reading => sending request to server
- */
-auto Client :: client_main () -> void {
+auto Client :: clientMain () -> void {
 
     char buffer[__STANDARD_BUFFER_SIZE];
     char * p_aux;
@@ -115,7 +101,7 @@ auto Client :: client_main () -> void {
 
         bool hasParams = split_param ( buffer, p_aux );
 
-        sint16 request_code = command_map.find( buffer )->second;
+        sint16 request_code = commandMap.find( buffer )->second;
 
         if ( request_code == __SIGNAL && ! hasParams ) {
             request_code = __NO_PARAM_REQUEST;

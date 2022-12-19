@@ -8,7 +8,6 @@
 #include "../../common/thread/ThreadCommons.hpp"
 
 #include "../movingVehicle/MovingVehicle.hpp"
-#include "../movingVehicle/impl/MovingVehicle.hpp"
 
 auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-reserved-identifier) */
 
@@ -102,7 +101,7 @@ auto _movement_main ( void * param ) -> void * {        /* NOLINT(bugprone-reser
         movingVehicle->changeSpeed();
         movingVehicle->moveVehicle();
 
-        speedParameter  = movingVehicle->getSpeed();
+        speedParameter    = movingVehicle->getSpeed();
         positionParameter = movingVehicle->getStreetId();
 
         if ( -1 == serverFd->write ( & speedRequest, sizeof ( speedRequest ), & speedParameter, sizeof ( speedParameter ) ) && errno == EPIPE ) {
@@ -138,5 +137,6 @@ static auto launch_new_thread (
 }
 
 
+#include "../movingVehicle/impl/MovingVehicle.hpp"
 
 #endif //CONCURRENT_SV_THREAD_HPP

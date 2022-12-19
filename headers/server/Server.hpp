@@ -5,52 +5,44 @@
 #ifndef CONCURRENT_SV_SERVER_HPP
 #define CONCURRENT_SV_SERVER_HPP
 
+#include <netinet/in.h>
 #include <list>
+#include <mutex>
 #include "../common/graph/Graph.hpp"
 
-
-#define __BACKLOG_SIZE 16    /* NOLINT(bugprone-reserved-identifier) */
+constexpr auto __BACKLOG_SIZE = 16;    /* NOLINT(bugprone-reserved-identifier) */
 
 class Server {
 
 private:
     static Server * _instance;
 
-private:
     sockaddr_in _server_info { };
 
-private:
     int _socked_fd { 0 };
 
-private:
-    pthread_t _queueSupervisorId { };
+    pthread_t _queue_supervisor_id { };
 
-private:
-    std :: list < pthread_t > _threadList { };
+    std :: list < pthread_t > _thread_list { };
 
-private:
-    pthread_mutex_t _threadListLock { };
+    std :: mutex _thread_list_lock { };
 
-private:
     Server();
 
 public:
     static auto getInstance () -> Server *;
 
-public:
-    auto initialize_server () -> bool;
+    auto initializeServer () -> bool;
 
-public:
-    [[nodiscard]] auto get_client () const -> int;
+    [[nodiscard]] auto getClient () const -> int;
 
-public:
-    [[nodiscard]] auto create_thread ( int * clientFd ) -> bool;
+    [[nodiscard]] auto createThread ( int * clientFd ) -> bool;
 
 private:
-    static auto server_error ( int clientFd, std :: string const & error ) -> void;
+    static auto serverError ( int clientFd, std :: string const & error ) -> void;
 
 public:
-    auto disconnect_client ( pthread_t threadId ) -> void;
+    auto disconnectClient ( pthread_t threadId ) -> void;
 };
 
 

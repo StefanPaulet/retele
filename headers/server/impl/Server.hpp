@@ -7,13 +7,12 @@
 
 Server * Server :: _instance = nullptr;
 
+
 Server :: Server () {
 
     this->_server_info.sin_family = AF_INET;
     this->_server_info.sin_addr.s_addr = htonl ( INADDR_ANY );
     this->_server_info.sin_port = htons ( __PORT );
-
-    pthread_mutex_init ( & this->_threadListLock, nullptr );
 }
 
 
@@ -26,7 +25,7 @@ auto Server :: getInstance () -> Server * {
 }
 
 
-auto Server :: initialize_server () -> bool {
+auto Server :: initializeServer () -> bool {
 
     if ( -1 == ( this->_socked_fd = socket ( AF_INET, SOCK_STREAM, 0 ) ) ) {
         perror ( "Socket creation error" );
@@ -49,11 +48,11 @@ auto Server :: initialize_server () -> bool {
         return false;
     }
 
-    return  launch_new_thread ( & this->_queueSupervisorId, & _queue_supervisor_main, nullptr );
+    return  launch_new_thread ( & this->_queue_supervisor_id, & _queue_supervisor_main, nullptr );
 }
 
 
-auto Server :: get_client () const -> int {
+auto Server :: getClient () const -> int {
 
     sockaddr_in client_address { };
     socklen_t  client_address_size = sizeof ( client_address );
@@ -68,28 +67,25 @@ auto Server :: get_client () const -> int {
 }
 
 
-auto Server :: create_thread ( int * clientFd ) -> bool {
+auto Server :: createThread ( int * clientFd ) -> bool {
 
 
     pthread_t newThread;
 
     bool returnStatus = launch_new_thread ( & newThread, & _server_main, clientFd );
     if ( ! returnStatus ) {
-        Server :: server_error( * clientFd, "Internal server error, try again later" );
+        Server :: serverError( * clientFd, "Internal server error, try again later" );
 
     }
 
-    pthread_mutex_lock ( & this->_threadListLock );
-
-    this->_threadList.push_back ( newThread );
-
-    pthread_mutex_unlock ( & this->_threadListLock );
+    std :: lock_guard lock ( this->_thread_list_lock );
+    this->_thread_list.push_back ( newThread );
 
     return returnStatus;
 }
 
 
-auto Server :: server_error ( int clientFd, std :: string const & error ) -> void {
+auto Server :: serverError ( int clientFd, std :: string const & error ) -> void {
 
     auto bufferSize = error.size();
     write ( clientFd, & bufferSize, sizeof ( bufferSize ) );
@@ -97,13 +93,10 @@ auto Server :: server_error ( int clientFd, std :: string const & error ) -> voi
     close ( clientFd );
 }
 
-auto Server :: disconnect_client ( pthread_t threadId ) -> void {
+auto Server :: disconnectClient ( pthread_t threadId ) -> void {
 
-    pthread_mutex_lock ( & this->_threadListLock );
-
-    this->_threadList.remove ( threadId );
-
-    pthread_mutex_unlock ( & this->_threadListLock );
+    std :: lock_guard lock ( this->_thread_list_lock );
+    this->_thread_list.remove ( threadId );
 }
 
 #endif //CONCURRENT_SV_SERVER_IMPL_HPP

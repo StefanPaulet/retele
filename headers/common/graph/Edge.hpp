@@ -12,9 +12,9 @@ class Edge {
 private:
     uint16 _id;
 
-    std :: pair < Node const *, Node const * > _endNodes;
+    std :: pair < Node const *, Node const * > _end_nodes;
 
-    uint8 _maxSpeed { 30 };
+    uint8 _max_speed { 30 };
 
     uint8 _length;
 
@@ -34,8 +34,8 @@ public:
             std :: string && name
     ) :
         _id       ( id ),
-        _endNodes ( firstEnd, secondEnd ),
-        _maxSpeed ( maxSpeed ),
+        _end_nodes ( firstEnd, secondEnd ),
+        _max_speed ( maxSpeed ),
         _length   ( length ),
         _name     ( std :: move ( name ) ) {
 
@@ -55,13 +55,13 @@ public:
 
     [[nodiscard]] auto isBlocked () const -> bool;
 
-    auto signal_traffic_jam () -> void;
+    auto signalTrafficJam () -> void;
 
-    auto signal_roadblock () -> void;
+    auto signalRoadblock () -> void;
 
-    auto remove_traffic_jam () -> void;
+    auto removeTrafficJam () -> void;
 
-    auto remove_roadblock () -> void;
+    auto removeRoadblock () -> void;
 };
 
 #include "impl/Node.hpp"

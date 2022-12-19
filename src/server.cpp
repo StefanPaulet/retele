@@ -8,7 +8,7 @@ int main () {
 
     auto server = Server :: getInstance();
 
-    if ( ! server->initialize_server () ) {
+    if ( ! server->initializeServer () ) {
         perror ( "Failed server initialization" );
         exit ( EXIT_FAILURE );
     }
@@ -16,13 +16,13 @@ int main () {
     while ( true ) {
 
         int * newClient = new int;
-        * newClient = server->get_client();
+        * newClient = server->getClient();
         if ( -1 == * newClient ) {
             continue;
         }
 
 
-        if ( ! server->create_thread ( newClient ) ) {
+        if ( ! server->createThread ( newClient ) ) {
             perror ( "Internal error, client couldn't be served" );
             continue;
         }

@@ -11,15 +11,15 @@
 class RandomGenerator {
 
 private:
-    std :: unique_ptr < std :: random_device > pGenerator = std ::make_unique < std :: random_device > ();
+    std :: unique_ptr < std :: random_device > _pGenerator = std ::make_unique < std :: random_device > ();
 public:
 
     [[nodiscard]] auto getRandomInRange ( uint8 maxValue ) const -> uint8 {
-        return ( * this->pGenerator )() % maxValue;
+        return ( * this->_pGenerator )() % maxValue;
     }
 
     [[nodiscard]] auto getRandomInRange ( uint16 maxValue ) const -> uint16 {
-        return ( * this->pGenerator )() % maxValue;
+        return ( * this->_pGenerator )() % maxValue;
     }
 };
 

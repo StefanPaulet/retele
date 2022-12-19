@@ -5,18 +5,20 @@
 #ifndef CONCURRENT_SV_NODE_HPP
 #define CONCURRENT_SV_NODE_HPP
 
+#include <memory>
+
 class Edge;
 
 class Node {
 
-private:        /* NOLINT(readability-redundant-access-specifiers) */
+private:
     uint16 _id;
 
     bool _gas_station;
 
-    std :: unique_ptr < std :: list < Edge * > > _pIncidentStreetList = std :: make_unique < std :: list < Edge * > > ();
+    std :: unique_ptr < std :: list < Edge * > > _pIncident_street_list = std :: make_unique < std :: list < Edge * > > ();
 
-public:         /* NOLINT(readability-redundant-access-specifiers) */
+public:
     explicit Node (
             uint16 id,
             bool gas_station = false

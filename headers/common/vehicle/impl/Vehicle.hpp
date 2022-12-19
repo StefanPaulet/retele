@@ -13,7 +13,7 @@ constexpr auto Vehicle :: getSpeed () const -> uint8 {
 
 constexpr auto Vehicle :: getStreetId () const -> uint16 {
 
-    return this->_streetId;
+    return this->_street_id;
 }
 
 
@@ -26,8 +26,8 @@ auto Vehicle :: setSpeed ( uint8 newSpeed ) -> uint8 {
 
 auto Vehicle :: setStreetId ( uint16 newStreetId ) -> uint16 {
 
-    this->_streetId = newStreetId;
-    return this->_streetId;
+    this->_street_id = newStreetId;
+    return this->_street_id;
 }
 
 #endif //CONCURRENT_SV_VEHICLE_IMPL_HPP

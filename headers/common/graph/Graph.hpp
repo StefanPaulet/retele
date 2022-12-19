@@ -5,22 +5,24 @@
 #ifndef CONCURRENT_SV_GRAPH_HPP
 #define CONCURRENT_SV_GRAPH_HPP
 
-#include "Edge.hpp"
+#include <list>
 #include <queue>
 #include <functional>
 #include <CDS/util/JSON>
 #include <CDS/filesystem/Path>
 
+#include "Edge.hpp"
+
 class Graph {
 
 private:
-    uint16 _nodeCount;
+    uint16 _node_count;
 
-    uint16 _edgeCount;
+    uint16 _edge_count;
 
-    Node * * _pNodeList;
+    Node * * _pNode_list;
 
-    Edge * * _pEdgeList;
+    Edge * * _pEdge_list;
 
 public:
     Graph();

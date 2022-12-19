@@ -6,12 +6,12 @@
 #define CONCURRENT_SV_USER_HPP
 
 #include <AtomicQueue>
-#include <CDS/util/JSON>
-#include <random>
-#include <array>
-#include <chrono>
+#include <map>
+
 #include "../../common/graph/Graph.hpp"
+
 #include "../../common/vehicle/Vehicle.hpp"
+
 #include "../../common/randomGenerator/RandomGenerator.hpp"
 
 class User {
@@ -43,15 +43,15 @@ private:
     };
     static CommonWeather * pCommonWeather;
 
-    friend auto _queue_supervisor_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
-
-     AtomicQueue :: QueueNode _pLocalEventNode { pEventQueue->front() };
+    AtomicQueue :: QueueNode _pLocalEventNode { pEventQueue->front() };
 
     int _client_fd;
 
     Vehicle _userPosition { 30, 0 };
 
     std :: pair < uint8, uint16 > _event_removal_pair { 0, 0 };
+
+    friend auto _queue_supervisor_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
 
 public:
     explicit User ( int clientFd ) :
@@ -67,34 +67,35 @@ public:
     };
 
 private:
-    auto send_msg ( std :: string const & message ) const -> void;
+    auto sendMessage ( std :: string const & message ) const -> void;
 
-    auto receive_initial_data () -> bool;
+    auto receiveInitialData () -> bool;
 
 public:
-    auto handle_request () -> void;
+    auto handleRequest () -> void;
 
 private:
-    auto handle_signal () -> void;
+    auto handleSignal () -> void;
 
-    auto handle_event_update () -> void;
+    auto handleEventUpdate () -> void;
 
-    auto handle_speed_limit_update () -> void;
+    auto handleSpeedLimitUpdate () -> void;
 
-    auto handle_event_removal () -> void;
+    auto handleEventRemoval () -> void;
 
-    auto remove_street_event ( uint8 eventType ) const -> void;
+    auto handleStreetEvent ( uint8 eventType ) const -> void;
 
-    auto handle_position_update () -> void;
+    auto handlePositionUpdate () -> void;
 
-    auto handle_speed_update () -> void;
+    auto handleSpeedUpdate () -> void;
 
-    auto handle_get_weather () -> void;
+    auto handleGetWeather () -> void;
 
-    auto handle_get_gas_stations () -> void;
+    auto handleGetGasStations () -> void;
 };
 
 #include "../../common/vehicle/impl/Vehicle.hpp"        /* NOLINT(llvm-include-order) */
+
 #include "../../common/graph/impl/Graph.hpp"
 
 #endif //CONCURRENT_SV_USER_HPP
