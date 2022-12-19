@@ -51,7 +51,7 @@ private:
 
     Vehicle _userPosition { 30, 0 };
 
-    uint8 _waiting_response { 0 };
+    std :: pair < uint8, uint16 > _event_removal_pair { 0, 0 };
 
 public:
     explicit User ( int clientFd ) :

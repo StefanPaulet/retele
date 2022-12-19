@@ -41,7 +41,7 @@ auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserve
     std :: pair < sint16 , uint8 > requests[] = {
             { __TIMED_EVENTS_UPDATE, 1 },
             { __TIMED_SPEED_LIMIT_UPDATE, 5 },
-            { __TIMED_EVENT_STILL_PRESENT, 10 },
+            { __TIMED_EVENT_STILL_PRESENT, 3 },
             { __TIMED_SPORTS_UPDATE, 60 }
     };
 

@@ -169,10 +169,10 @@ auto User :: receive_initial_data () -> bool {
     }
     this->_userPosition.setSpeed( recv_speed );
 
-    printf ( "Client %d sent his position %d and speed %d\n",
-            this->_client_fd,
-            this->_userPosition.getStreetId(),
-            this->_userPosition.getSpeed() );
+//    printf ( "Client %d sent his position %d and speed %d\n",
+//            this->_client_fd,
+//            this->_userPosition.getStreetId(),
+//            this->_userPosition.getSpeed() );
     return true;
 }
 
@@ -240,8 +240,8 @@ auto User :: handle_request () -> void {
                 break;
             }
             case __EVENT_MISSING : {
-                if ( this->_waiting_response > 0 ) {
-                    this->remove_street_event ( this->_waiting_response );
+                if ( this->_event_removal_pair.first > 0 ) {
+                    this->remove_street_event ( this->_event_removal_pair.first );
                     break;
                 }
             }
@@ -273,17 +273,19 @@ auto User :: handle_signal () -> void {
 
             this->send_msg ( "Thank you for your signal\n" );
 
-            stringedBuffer += " on" + userStreet->getName() + "\n";
+            stringedBuffer += " on " + userStreet->getName() + "\n";
 
             pEventQueue->push_back ( std :: move ( stringedBuffer ) );
 
             if ( e == "roadblock" ) {
+//                printf ( "Roadblock on street %s signaled\n", userStreet->getName().c_str() );
                 if ( userStreet->isJammed() ) {
                     userStreet->remove_traffic_jam ();
                 }
                 userStreet->signal_roadblock();
             } else {
                 if ( e != "police" && ! userStreet->isBlocked() ) {
+//                    printf ( "Traffic jam on street %s signaled\n", userStreet->getName().c_str() );
                     pGraph->getStreet ( this->_userPosition.getStreetId() )->signal_traffic_jam();
                 }
             }
@@ -320,16 +322,18 @@ auto User :: handle_speed_limit_update () -> void {
 
 auto User :: handle_event_removal () -> void {
 
-    this->_waiting_response = 0;
+    this->_event_removal_pair.first = 0;
 
     auto userStreet = pGraph->getStreet ( this->_userPosition.getStreetId() );
+    this->_event_removal_pair.second = this->_userPosition.getStreetId();
+
     if ( userStreet->isBlocked() ) {
         this->send_msg ( "Roadblock signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
-        this->_waiting_response = 1;
+        this->_event_removal_pair.first = 1;
     } else {
         if ( userStreet->isJammed() ) {
             this->send_msg ( "Traffic jam signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
-            this->_waiting_response = 2;
+            this->_event_removal_pair.first = 2;
         }
     }
 }
@@ -338,9 +342,11 @@ auto User :: handle_event_removal () -> void {
 auto User :: remove_street_event ( uint8 eventType ) const -> void {
 
     if ( eventType == 1 ) {
-        pGraph->getStreet ( this->_userPosition.getStreetId() )->remove_roadblock();
+//        printf ( "Roadblock on street %s removed\n", pGraph->getStreet ( this->_event_removal_pair.second )->getName().c_str() );
+        pGraph->getStreet ( this->_event_removal_pair.second )->remove_roadblock();
     } else if ( eventType == 2 ) {
-        pGraph->getStreet ( this->_userPosition.getStreetId() )->remove_traffic_jam();
+//        printf ( "Traffic jam on street %s removed\n", pGraph->getStreet ( this->_event_removal_pair.second )->getName().c_str() );
+        pGraph->getStreet ( this->_event_removal_pair.second )->remove_traffic_jam();
     }
     this->send_msg ( "Thank you! Problem removed\n" );
 }
