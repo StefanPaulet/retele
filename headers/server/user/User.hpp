@@ -25,12 +25,21 @@ private:
 
     static std :: array < std :: string, 6 > const signalNamesArray;
 
+
+    struct GasStationMap {
+        std :: unique_ptr < std :: map < uint16, std :: pair < cds :: String const *, float > > > pMap = std :: make_unique < std :: map < uint16, std :: pair < cds :: String const *, float > > > ();
+
+        GasStationMap ();
+        ~GasStationMap ();
+    };
+    static GasStationMap const * pGasStationMap;
+
     struct CommonWeather {
         uint8 commonChoice = 0;
         std :: unique_ptr < std :: vector < std :: string const * > > pWeatherString = std :: make_unique < std :: vector < std :: string const * > > ();
 
-        CommonWeather();
-        ~CommonWeather();
+        CommonWeather ();
+        ~CommonWeather ();
     };
     static CommonWeather * pCommonWeather;
 

@@ -4,10 +4,14 @@
   "gasStationCount" : 2,
   "gasStations" : [
     {
-      "id" : 1
+      "id" : 1,
+      "name" : "Rompetrol",
+      "gasPrice" : 6.71
     },
     {
-      "id" : 6
+      "id" : 6,
+      "name" : "OMV",
+      "gasPrice" : 7.05
     }
   ],
   "streets" : [

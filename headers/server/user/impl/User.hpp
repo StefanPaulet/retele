@@ -20,6 +20,33 @@ std :: array < std :: string, 6 > const User :: signalNamesArray {
     "crowded"
 };
 
+
+User :: GasStationMap :: GasStationMap () {
+
+    cds :: String mapPathString = cds :: filesystem :: Path ( __COMMON_LIBS_PATH ).parent().parent() / "resources/map.json";
+    auto mapPathStringLiteral = mapPathString.cStr();
+    std :: stringstream iss;
+    iss << std :: ifstream ( mapPathStringLiteral ).rdbuf();
+
+    auto jsonData = cds :: json :: parseJson ( iss.str() );
+
+    for ( auto & e : jsonData.getArray ( "gasStations" ) ) {
+        auto entry = e.getJson();
+        auto newString = new cds :: String ( entry.getString ( "name" ) );
+        ( * this->pMap ) [ entry.getInt ( "id" ) ] = std :: make_pair ( newString, entry.getFloat ( "gasPrice" ) );
+    }
+}
+User :: GasStationMap :: ~GasStationMap () {
+
+    for ( auto & [ key, value ] : * this->pMap ) {
+        delete value.first;
+    }
+    this->pMap.reset ();
+}
+User :: GasStationMap const * User :: pGasStationMap = new GasStationMap;
+
+
+
 User :: CommonWeather :: CommonWeather() {
 
     std :: string currentSeason;
@@ -365,7 +392,9 @@ auto User :: handle_get_gas_stations () -> void {
                 ++ firstStreet;
             }
             resultString +=
-                    "The intersection of streets " + ( * firstStreet )->getName() +
+                    "Gas station " + ( * pGasStationMap->pMap ) [ e->getId() ].first->toString() +
+                    " with gas price " + roundf ( ( * pGasStationMap->pMap ) [ e->getId() ].second * 100 ) / 100 +
+                    " at the intersection of streets " + ( * firstStreet )->getName() +
                     " and " + ( * secondStreet )->getName() + "\n";
         }
         this->send_msg ( resultString );

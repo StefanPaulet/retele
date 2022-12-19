@@ -15,14 +15,14 @@ Graph :: Graph() {
 
     auto jsonData = cds :: json :: parseJson ( iss.str() );
 
-    this->_nodeCount = jsonData.getInt ( "nodeCount" );
-    this->_edgeCount = jsonData.getInt ( "edgeCount" );
+    this->_nodeCount = ( uint16 ) jsonData.getInt ( "nodeCount" );
+    this->_edgeCount = ( uint16 ) jsonData.getInt ( "edgeCount" );
 
 
     this->_pNodeList = new Node * [ this->_nodeCount ];
     this->_pEdgeList = new Edge * [ this->_edgeCount ];
 
-    for ( auto i = 0; i < this->_nodeCount; ++ i ) {
+    for ( uint16 i = 0; i < this->_nodeCount; ++ i ) {
         this->_pNodeList [ i ] = new Node ( i );
     }
 
@@ -33,13 +33,13 @@ Graph :: Graph() {
 
     int i = 0;
     for ( auto & e : jsonData.getArray ( "streets" ) ) {
-        auto aux = e.getJson();
+        auto entry = e.getJson();
 
-        uint16 firstNode   = aux.getInt ( "firstEndId" );
-        uint16 secondNode  = aux.getInt ( "secondEndId" );
-        uint8 speedLimit   = aux.getInt ( "speedLimit" );
-        uint8 length       = aux.getInt ( "length" );
-        std :: string name = aux.getString ( "name" );
+        uint16 firstNode   = entry.getInt ( "firstEndId" );
+        uint16 secondNode  = entry.getInt ( "secondEndId" );
+        uint8 speedLimit   = entry.getInt ( "speedLimit" );
+        uint8 length       = entry.getInt ( "length" );
+        std :: string name = entry.getString ( "name" );
 
         this->_pEdgeList [ i ] = new Edge ( i, this->_pNodeList [ firstNode ], this->_pNodeList [ secondNode ], speedLimit, length, std :: move ( name ) );
         this->_pNodeList [ firstNode ]->add_incident_street ( this->_pEdgeList [ i ] );

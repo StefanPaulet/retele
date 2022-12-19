@@ -26,19 +26,14 @@ public:         /* NOLINT(readability-redundant-access-specifiers) */
 
     }
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
     [[nodiscard]] constexpr auto isGasStation () const -> bool;
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
     [[nodiscard]] auto getStreetList () const -> std :: list < Edge * > *;
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
     [[nodiscard]] auto getId () const -> uint16;
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto setGasStation () -> void;
 
-public:     /* NOLINT(readability-redundant-access-specifiers) */
     auto add_incident_street (
             Edge * neighbour
     ) -> void;
