@@ -200,43 +200,43 @@
     {
       "firstEndId" : 22,
       "secondEndId" : 23,
-      "speedLimit" : 90,
-      "length" : 15,
+      "speedLimit" : 30,
+      "length" : 3,
       "name" : "Strada Ion Ionescu de la Brad"
     },
     {
       "firstEndId" : 21,
       "secondEndId" : 23,
-      "speedLimit" : 90,
-      "length" : 15,
+      "speedLimit" : 30,
+      "length" : 4,
       "name" : "Strada Gloriei"
     },
     {
       "firstEndId" : 1,
       "secondEndId" : 23,
-      "speedLimit" : 90,
-      "length" : 15,
+      "speedLimit" : 30,
+      "length" : 6,
       "name" : "Strada Gloriei"
     },
     {
       "firstEndId" : 18,
       "secondEndId" : 19,
-      "speedLimit" : 90,
-      "length" : 15,
+      "speedLimit" : 30,
+      "length" : 4,
       "name" : "Strada Otelari"
     },
     {
       "firstEndId" : 2,
       "secondEndId" : 20,
-      "speedLimit" : 90,
-      "length" : 15,
+      "speedLimit" : 30,
+      "length" : 4,
       "name" : "Strada Profesor Ion Inculet"
     },
     {
       "firstEndId" : 21,
       "secondEndId" : 22,
-      "speedLimit" : 90,
-      "length" : 15,
+      "speedLimit" : 30,
+      "length" : 3,
       "name" : "Strada Profesor Ion Inculet"
     }
   ]

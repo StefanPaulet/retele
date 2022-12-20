@@ -45,11 +45,11 @@ auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-r
                 break;
             }
             case __FEED_UPDATE_RESPONSE : {
-                printf ( "\033[4F\033[2K" );
+                printf ( "\033[5F\033[2K" );
                 for ( int i = 0; i < 3; ++ i ) {
                     printf ( "\033[1F\033[2K" );
                 }
-                printf ( "%s\033[7E\0338", buffer );
+                printf ( "%s\033[8E\0338", buffer );
                 break;
             }
             case __CONSISTENT_DATA_RESPONSE : {
