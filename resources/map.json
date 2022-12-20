@@ -1,15 +1,15 @@
 {
-  "nodeCount" : 9,
-  "edgeCount" : 12,
+  "nodeCount" : 23,
+  "edgeCount" : 32,
   "gasStationCount" : 2,
   "gasStations" : [
     {
-      "id" : 1,
-      "name" : "Rompetrol",
+      "id" : 3,
+      "name" : "Helios",
       "gasPrice" : 6.71
     },
     {
-      "id" : 6,
+      "id" : 1,
       "name" : "OMV",
       "gasPrice" : 7.05
     }
@@ -18,86 +18,226 @@
     {
       "firstEndId" : 0,
       "secondEndId" : 1,
-      "speedLimit" : 30,
-      "length" : 5,
-      "name" : "Strada 1"
+      "speedLimit" : 50,
+      "length" : 3,
+      "name" : "Soseaua Nicolina"
     },
     {
       "firstEndId" : 1,
       "secondEndId" : 2,
-      "speedLimit" : 30,
-      "length" : 4,
-      "name" : "Strada 2"
+      "speedLimit" : 50,
+      "length" : 8,
+      "name" : "Soseaua Nicolina"
     },
     {
-      "firstEndId" : 3,
+      "firstEndId" : 2,
+      "secondEndId" : 3,
+      "speedLimit" : 50,
+      "length" : 20,
+      "name" : "Soseaua Nicolina"
+    },
+    {
+      "firstEndId" : 0,
       "secondEndId" : 4,
-      "speedLimit" : 30,
-      "length" : 6,
-      "name" : "Strada 3"
+      "speedLimit" : 50,
+      "length" : 5,
+      "name" : "Strada Arhitect Ioan Berindei"
     },
     {
       "firstEndId" : 4,
       "secondEndId" : 5,
-      "speedLimit" : 30,
+      "speedLimit" : 50,
       "length" : 5,
-      "name" : "Strada 4"
+      "name" : "Strada Fundacul Perjoaia"
+    },
+    {
+      "firstEndId" : 2,
+      "secondEndId" : 6,
+      "speedLimit" : 50,
+      "length" : 4,
+      "name" : "Soseaua Tudor Neculai"
     },
     {
       "firstEndId" : 6,
       "secondEndId" : 7,
-      "speedLimit" : 30,
-      "length" : 8,
-      "name" : "Strada 5"
+      "speedLimit" : 50,
+      "length" : 4,
+      "name" : "Soseaua Tudor Neculai"
+    },
+    {
+      "firstEndId" : 7,
+      "secondEndId" : 5,
+      "speedLimit" : 50,
+      "length" : 4,
+      "name" : "Soseaua Tudor Neculai"
+    },
+    {
+      "firstEndId" : 5,
+      "secondEndId" : 12,
+      "speedLimit" : 50,
+      "length" : 4,
+      "name" : "Soseaua Tudor Neculai"
     },
     {
       "firstEndId" : 7,
       "secondEndId" : 8,
       "speedLimit" : 30,
-      "length" : 4,
-      "name" : "Strada 6"
+      "length" : 6,
+      "name" : "Aleeaa Tudor Neculai"
     },
     {
-      "firstEndId" : 0,
-      "secondEndId" : 3,
+      "firstEndId" : 8,
+      "secondEndId" : 9,
+      "speedLimit" : 30,
+      "length" : 6,
+      "name" : "Aleeaa Tudor Neculai"
+    },
+    {
+      "firstEndId" : 9,
+      "secondEndId" : 10,
+      "speedLimit" : 30,
+      "length" : 6,
+      "name" : "Aleeaa Tudor Neculai"
+    },
+    {
+      "firstEndId" : 10,
+      "secondEndId" : 11,
+      "speedLimit" : 30,
+      "length" : 6,
+      "name" : "Aleeaa Tudor Neculai"
+    },
+    {
+      "firstEndId" : 6,
+      "secondEndId" : 8,
+      "speedLimit" : 30,
+      "length" : 5,
+      "name" : "Aleea Oltea Doamna"
+    },
+    {
+      "firstEndId" : 12,
+      "secondEndId" : 13,
+      "speedLimit" : 30,
+      "length" : 8,
+      "name" : "Strada Sf. Vasile"
+    },
+    {
+      "firstEndId" : 13,
+      "secondEndId" : 14,
+      "speedLimit" : 30,
+      "length" : 8,
+      "name" : "Strada Sf. Vasile"
+    },
+    {
+      "firstEndId" : 9,
+      "secondEndId" : 13,
+      "speedLimit" : 30,
+      "length" : 4,
+      "name" : "Strada Sf.Gheorghe"
+    },
+    {
+      "firstEndId" : 10,
+      "secondEndId" : 14,
       "speedLimit" : 50,
       "length" : 7,
-      "name" : "Strada 7"
+      "name" : "Strada Miroslava"
     },
     {
       "firstEndId" : 3,
-      "secondEndId" : 6,
+      "secondEndId" : 11,
       "speedLimit" : 50,
-      "length" : 2,
-      "name" : "Strada 8"
+      "length" : 7,
+      "name" : "Strada Miroslava"
+    },
+    {
+      "firstEndId" : 3,
+      "secondEndId" : 16,
+      "speedLimit" : 60,
+      "length" : 9,
+      "name" : "Strada Razoarelor"
+    },
+    {
+      "firstEndId" : 16,
+      "secondEndId" : 17,
+      "speedLimit" : 60,
+      "length" : 9,
+      "name" : "Strada Razoarelor"
+    },
+    {
+      "firstEndId" : 16,
+      "secondEndId" : 18,
+      "speedLimit" : 60,
+      "length" : 5,
+      "name" : "Strada Profesor Ion Inculet"
+    },
+    {
+      "firstEndId" : 17,
+      "secondEndId" : 19,
+      "speedLimit" : 60,
+      "length" : 5,
+      "name" : "Strada Profesor Ion Inculet"
+    },
+    {
+      "firstEndId" : 18,
+      "secondEndId" : 20,
+      "speedLimit" : 60,
+      "length" : 5,
+      "name" : "Strada Profesor Ion Inculet"
+    },
+    {
+      "firstEndId" : 19,
+      "secondEndId" : 21,
+      "speedLimit" : 60,
+      "length" : 5,
+      "name" : "Strada Profesor Ion Inculet"
+    },
+    {
+      "firstEndId" : 20,
+      "secondEndId" : 22,
+      "speedLimit" : 60,
+      "length" : 5,
+      "name" : "Strada Profesor Ion Inculet"
+    },
+    {
+      "firstEndId" : 22,
+      "secondEndId" : 23,
+      "speedLimit" : 90,
+      "length" : 15,
+      "name" : "Strada Ion Ionescu de la Brad"
+    },
+    {
+      "firstEndId" : 21,
+      "secondEndId" : 23,
+      "speedLimit" : 90,
+      "length" : 15,
+      "name" : "Strada Gloriei"
     },
     {
       "firstEndId" : 1,
-      "secondEndId" : 4,
-      "speedLimit" : 60,
-      "length" : 9,
-      "name" : "Strada 9"
+      "secondEndId" : 23,
+      "speedLimit" : 90,
+      "length" : 15,
+      "name" : "Strada Gloriei"
     },
     {
-      "firstEndId" : 4,
-      "secondEndId" : 7,
-      "speedLimit" : 60,
-      "length" : 5,
-      "name" : "Strada 10"
+      "firstEndId" : 18,
+      "secondEndId" : 19,
+      "speedLimit" : 90,
+      "length" : 15,
+      "name" : "Strada Otelari"
     },
     {
       "firstEndId" : 2,
-      "secondEndId" : 5,
-      "speedLimit" : 90,
-      "length" : 3,
-      "name" : "Strada 11"
-    },
-    {
-      "firstEndId" : 5,
-      "secondEndId" : 8,
+      "secondEndId" : 20,
       "speedLimit" : 90,
       "length" : 15,
-      "name" : "Strada 12"
+      "name" : "Strada Profesor Ion Inculet"
+    },
+    {
+      "firstEndId" : 21,
+      "secondEndId" : 22,
+      "speedLimit" : 90,
+      "length" : 15,
+      "name" : "Strada Profesor Ion Inculet"
     }
   ]
 }
