@@ -18,21 +18,21 @@
     {
       "firstEndId" : 0,
       "secondEndId" : 1,
-      "speedLimit" : 50,
+      "speedLimit" : 70,
       "length" : 3,
       "name" : "Soseaua Nicolina"
     },
     {
       "firstEndId" : 1,
       "secondEndId" : 2,
-      "speedLimit" : 50,
+      "speedLimit" : 70,
       "length" : 8,
       "name" : "Soseaua Nicolina"
     },
     {
       "firstEndId" : 2,
       "secondEndId" : 3,
-      "speedLimit" : 50,
+      "speedLimit" : 70,
       "length" : 20,
       "name" : "Soseaua Nicolina"
     },
@@ -46,84 +46,84 @@
     {
       "firstEndId" : 4,
       "secondEndId" : 5,
-      "speedLimit" : 50,
-      "length" : 5,
+      "speedLimit" : 30,
+      "length" : 3,
       "name" : "Strada Fundacul Perjoaia"
     },
     {
       "firstEndId" : 2,
       "secondEndId" : 6,
-      "speedLimit" : 50,
+      "speedLimit" : 70,
       "length" : 4,
       "name" : "Soseaua Tudor Neculai"
     },
     {
       "firstEndId" : 6,
       "secondEndId" : 7,
-      "speedLimit" : 50,
-      "length" : 4,
+      "speedLimit" : 70,
+      "length" : 2,
       "name" : "Soseaua Tudor Neculai"
     },
     {
       "firstEndId" : 7,
       "secondEndId" : 5,
-      "speedLimit" : 50,
-      "length" : 4,
+      "speedLimit" : 70,
+      "length" : 5,
       "name" : "Soseaua Tudor Neculai"
     },
     {
       "firstEndId" : 5,
       "secondEndId" : 12,
-      "speedLimit" : 50,
-      "length" : 4,
+      "speedLimit" : 70,
+      "length" : 1,
       "name" : "Soseaua Tudor Neculai"
     },
     {
       "firstEndId" : 7,
       "secondEndId" : 8,
-      "speedLimit" : 30,
-      "length" : 6,
+      "speedLimit" : 50,
+      "length" : 10,
       "name" : "Aleeaa Tudor Neculai"
     },
     {
       "firstEndId" : 8,
       "secondEndId" : 9,
-      "speedLimit" : 30,
-      "length" : 6,
+      "speedLimit" : 50,
+      "length" : 2,
       "name" : "Aleeaa Tudor Neculai"
     },
     {
       "firstEndId" : 9,
       "secondEndId" : 10,
-      "speedLimit" : 30,
-      "length" : 6,
+      "speedLimit" : 50,
+      "length" : 4,
       "name" : "Aleeaa Tudor Neculai"
     },
     {
       "firstEndId" : 10,
       "secondEndId" : 11,
-      "speedLimit" : 30,
-      "length" : 6,
+      "speedLimit" : 50,
+      "length" : 3,
       "name" : "Aleeaa Tudor Neculai"
     },
     {
       "firstEndId" : 6,
       "secondEndId" : 8,
       "speedLimit" : 30,
-      "length" : 5,
+      "length" : 3,
       "name" : "Aleea Oltea Doamna"
     },
     {
       "firstEndId" : 12,
       "secondEndId" : 13,
-      "speedLimit" : 30,
+      "speedLimit" : 50,
       "length" : 8,
       "name" : "Strada Sf. Vasile"
     },
     {
       "firstEndId" : 13,
       "secondEndId" : 14,
-      "speedLimit" : 30,
+      "speedLimit" : 50,
       "length" : 8,
       "name" : "Strada Sf. Vasile"
     },
@@ -138,7 +138,7 @@
       "firstEndId" : 10,
       "secondEndId" : 14,
       "speedLimit" : 50,
-      "length" : 7,
+      "length" : 4,
       "name" : "Strada Miroslava"
     },
     {
@@ -151,50 +151,50 @@
     {
       "firstEndId" : 3,
       "secondEndId" : 16,
-      "speedLimit" : 60,
-      "length" : 9,
+      "speedLimit" : 30,
+      "length" : 7,
       "name" : "Strada Razoarelor"
     },
     {
       "firstEndId" : 16,
       "secondEndId" : 17,
-      "speedLimit" : 60,
-      "length" : 9,
+      "speedLimit" : 30,
+      "length" : 4,
       "name" : "Strada Razoarelor"
     },
     {
       "firstEndId" : 16,
       "secondEndId" : 18,
-      "speedLimit" : 60,
-      "length" : 5,
+      "speedLimit" : 30,
+      "length" : 6,
       "name" : "Strada Profesor Ion Inculet"
     },
     {
       "firstEndId" : 17,
       "secondEndId" : 19,
-      "speedLimit" : 60,
-      "length" : 5,
+      "speedLimit" : 30,
+      "length" : 6,
       "name" : "Strada Profesor Ion Inculet"
     },
     {
       "firstEndId" : 18,
       "secondEndId" : 20,
-      "speedLimit" : 60,
-      "length" : 5,
+      "speedLimit" : 30,
+      "length" : 12,
       "name" : "Strada Profesor Ion Inculet"
     },
     {
       "firstEndId" : 19,
       "secondEndId" : 21,
-      "speedLimit" : 60,
-      "length" : 5,
+      "speedLimit" : 30,
+      "length" : 12,
       "name" : "Strada Profesor Ion Inculet"
     },
     {
       "firstEndId" : 20,
       "secondEndId" : 22,
-      "speedLimit" : 60,
-      "length" : 5,
+      "speedLimit" : 30,
+      "length" : 6,
       "name" : "Strada Profesor Ion Inculet"
     },
     {

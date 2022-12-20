@@ -124,7 +124,14 @@ User :: CommonWeather :: ~CommonWeather () {
 auto User :: pCommonWeather = new CommonWeather;
 
 
-auto User :: sendMessage ( std :: string const & message ) const -> void {
+auto User :: sendMessage (
+        ResponseIDs           responseType,
+        std :: string const & message
+) const -> void {
+
+    auto resRef = responseType;
+
+    write ( this->_client_fd, & resRef, sizeof ( resRef ) );
 
     auto messageSize = message.size();
 
@@ -176,7 +183,7 @@ auto User :: receiveInitialData () -> bool {
 auto User :: handleRequest () -> void {
 
     bool clientConnected = true;
-    sint16 request_nr;
+    CommandIDs request_nr;
 
     if ( ! this->receiveInitialData() ) {
         pthread_cancel ( pthread_self() );
@@ -191,15 +198,14 @@ auto User :: handleRequest () -> void {
 
         switch ( request_nr ) {
             case __NO_PARAM_REQUEST : {
-                this->sendMessage ( "Command must have parameters\n" );
+                this->sendMessage ( __QUICK_RESPONSE, "Command must have parameters\n" );
                 break;
             }
-            case __SIGNAL : {
+            case __SIGNAL_REQUEST : {
                 this->handleSignal();
                 break;
             }
             case __EXIT : {
-                this->sendMessage ( "Bye bye\n" );
                 clientConnected = false;
                 break;
             }
@@ -228,7 +234,7 @@ auto User :: handleRequest () -> void {
                 this->handleGetWeather();
                 break;
             }
-            case __GET_GS : {
+            case __GET_GAS_STATIONS : {
                 this->handleGetGasStations();
                 break;
             }
@@ -253,7 +259,7 @@ auto User :: handleRequest () -> void {
                 }
             }
             default : {
-                this->sendMessage ( "No such command available\n" );
+                this->sendMessage ( __QUICK_RESPONSE, "No such command available" );
                 break;
             }
         }
@@ -278,9 +284,9 @@ auto User :: handleSignal () -> void {
     for ( auto & e : signalNamesArray ) {
         if ( e == stringedBuffer ) {
 
-            this->sendMessage ( "Thank you for your signal\n" );
+            this->sendMessage ( __QUICK_RESPONSE, "Thank you for your signal" );
 
-            stringedBuffer += " on " + userStreet->getName() + "\n";
+            stringedBuffer += " on " + userStreet->getName() + "";
 
             pEventQueue->push_back ( std :: move ( stringedBuffer ) );
 
@@ -301,7 +307,7 @@ auto User :: handleSignal () -> void {
         }
     }
 
-    this->sendMessage ( "Sorry, no such signal available\n" );
+    this->sendMessage ( __QUICK_RESPONSE, "Sorry, no such signal available" );
 
 }
 
@@ -310,7 +316,7 @@ auto User :: handleEventUpdate () -> void {
 
     if ( this->_pLocalEventNode != pEventQueue->back() ) {
         std :: string event = "Attention: " + this->_pLocalEventNode->_message;
-        this->sendMessage ( event );
+        this->sendMessage ( __CONSISTENT_DATA_RESPONSE, event );
         this->_pLocalEventNode = this->_pLocalEventNode->_pNext;
     }
 }
@@ -321,7 +327,13 @@ auto User :: handleSpeedLimitUpdate () -> void {
     auto speedLimit = pGraph->getStreet ( this->_userPosition.getStreetId() )->getMaxSpeed();
     if ( speedLimit < this->_userPosition.getSpeed() ) {
         this->sendMessage (
-                "Careful! Speed limit is " + std :: to_string ( speedLimit ) + "\n"
+                __DRIVING_STYLE_RESPONSE,
+                "Careful! Speed limit is " + std :: to_string ( speedLimit )
+            );
+    } else {
+        this->sendMessage (
+                __DRIVING_STYLE_RESPONSE,
+                "You are driving within speed limit"
             );
     }
 }
@@ -335,12 +347,14 @@ auto User :: handleEventRemoval () -> void {
     this->_event_removal_pair.second = this->_userPosition.getStreetId();
 
     if ( userStreet->isBlocked() ) {
-        this->sendMessage ( "Roadblock signaled on your street. Is it still there?[write \"remove\" to remove it]\n" );
+        this->sendMessage ( __ROAD_STATUS_RESPONSE, "Roadblock signaled on your street. Is it still there?[write \"remove\" to remove it]" );
         this->_event_removal_pair.first = 1;
     } else {
         if ( userStreet->isJammed() ) {
-            this->sendMessage ( "Traffic jam signaled on your street. Is it still there?[write \"remove\" to remove it]\n" );
+            this->sendMessage ( __ROAD_STATUS_RESPONSE, "Traffic jam signaled on your street. Is it still there?[write \"remove\" to remove it]" );
             this->_event_removal_pair.first = 2;
+        } else {
+            this->sendMessage ( __ROAD_STATUS_RESPONSE, "The road is clear" );
         }
     }
 }
@@ -355,7 +369,7 @@ auto User :: handleStreetEvent ( uint8 eventType ) const -> void {
 //        printf ( "Traffic jam on street %s removed\n", pGraph->getStreet ( this->_event_removal_pair.second )->getName().c_str() );
         pGraph->getStreet ( this->_event_removal_pair.second )->removeTrafficJam();
     }
-    this->sendMessage ( "Thank you! Problem removed\n" );
+    this->sendMessage ( __QUICK_RESPONSE, "Thank you! Problem removed" );
 }
 
 
@@ -383,7 +397,7 @@ auto User :: handleSpeedUpdate () -> void {
 
 auto User :: handleGetWeather () -> void {
 
-    this->sendMessage ( * ( * pCommonWeather->pWeatherString ) [ pCommonWeather->commonChoice ] );
+    this->sendMessage ( __FEED_UPDATE_RESPONSE, * ( * pCommonWeather->pWeatherString ) [ pCommonWeather->commonChoice ] );
 }
 
 
@@ -395,22 +409,21 @@ auto User :: handleGetGasStations () -> void {
     );
 
     if ( pResults->empty() ) {
-        this->sendMessage ( "Sorry, we couldn't find what you needed in your vicinity\n" );
+        this->sendMessage ( __QUICK_RESPONSE, "Sorry, we couldn't find what you needed in your vicinity" );
     } else {
         std :: stringstream sstream;
-        sstream << "We found what you need at:\n";
         for ( auto & e : * pResults ) {
             auto firstStreet = e->getStreetList()->begin();
             auto secondStreet = firstStreet ++;
             if ( ( * firstStreet )->getName() == ( * secondStreet )->getName() ) {
                 ++ firstStreet;
             }
-            sstream << "Gas station " + ( * pGasStationMap->pMap ) [ e->getId() ].first->toString() + " with gas price ";
+            sstream << ( * pGasStationMap->pMap ) [ e->getId() ].first->toString() + "; gas price ";
             sstream << std :: fixed << std :: setprecision ( 2 ) << ( * pGasStationMap->pMap ) [ e->getId() ].second;
-            sstream << " at the intersection of streets " + ( * firstStreet )->getName() +
+            sstream << "; intersection of " + ( * firstStreet )->getName() +
                     " and " + ( * secondStreet )->getName() + "\n";
         }
-        this->sendMessage ( sstream.str() );
+        this->sendMessage ( __FEED_UPDATE_RESPONSE, sstream.str() );
     }
 
     delete pResults;
@@ -420,10 +433,10 @@ auto User :: handleGetGasStations () -> void {
 auto User :: handleSetSportNews () -> void {
 
     if ( this->_sport_news_enabled ) {
-        this->sendMessage ( "Sport news already enabled\n" );
+        this->sendMessage ( __QUICK_RESPONSE, "Sport news already enabled" );
     } else {
         this->_sport_news_enabled = true;
-        this->sendMessage ( "Sport news enabled\n" );
+        this->sendMessage ( __QUICK_RESPONSE,"Sport news enabled" );
     }
 }
 
@@ -431,10 +444,10 @@ auto User :: handleSetSportNews () -> void {
 auto User :: handleUnsetSportNews () -> void {
 
     if ( ! this->_sport_news_enabled ) {
-        this->sendMessage ( "Sport news already disabled\n" );
+        this->sendMessage ( __QUICK_RESPONSE,"Sport news already disabled" );
     } else {
         this->_sport_news_enabled = false;
-        this->sendMessage ( "Sport news disabled\n" );
+        this->sendMessage ( __QUICK_RESPONSE,"Sport news disabled" );
     }
 }
 
@@ -455,10 +468,10 @@ auto User :: handleGetSportNews () -> void {
         }
     }
 
+    std :: stringstream response;
     for ( auto & j : s) {
-        std :: string stringedBuffer ( j );
-        stringedBuffer += "\n";
-        this->sendMessage ( stringedBuffer );
+        response << j << '\n';
     }
+    this->sendMessage ( __FEED_UPDATE_RESPONSE, response.str() );
 }
 #endif //CONCURRENT_SV_USER_IMPL_HPP

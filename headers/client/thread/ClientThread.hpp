@@ -5,30 +5,68 @@
 #ifndef CONCURRENT_SV_THREAD_HPP
 #define CONCURRENT_SV_THREAD_HPP
 
-#include "../../common/thread/ThreadCommons.hpp"
-
 #include "../movingVehicle/MovingVehicle.hpp"
 
 auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-reserved-identifier) */
 
     auto serverFd = reinterpret_cast < AtomicSocket * > ( param );
 
+    ResponseIDs responseType;
     uint64 bufferSize;
     char buffer [ __STANDARD_BUFFER_SIZE ];
 
     while ( true ) {
 
+        if ( 0 >= serverFd->read ( & responseType, sizeof ( responseType ) ) ) {
+            printf ( "1Server connection dropped\n" );
+            pthread_cancel ( pthread_self() );
+            break;
+        }
         if ( 0 >= serverFd->read ( & bufferSize, sizeof ( bufferSize ) ) ) {
-            printf ( "Server connection dropped\n" );
+            printf ( "2Server connection dropped\n" );
             pthread_cancel ( pthread_self() );
             break;
         }
         if ( 0 >= serverFd->read ( buffer, bufferSize )) {
-            printf ( "Server connection dropped\n" );
+            printf ( "3Server connection dropped\n" );
             pthread_cancel ( pthread_self() );
             break;
         }
-        write ( 1, buffer, bufferSize );
+        buffer [ bufferSize ] = 0;
+
+        printf ( "\0337" );
+        switch ( responseType ) {
+            case __DRIVING_STYLE_RESPONSE : {
+                printf ( "\033[10F\033[2K%s\033[10E\0338", buffer );
+                break;
+            }
+            case __ROAD_STATUS_RESPONSE : {
+                printf ( "\033[9F\033[2K%s\033[9E\0338", buffer );
+                break;
+            }
+            case __FEED_UPDATE_RESPONSE : {
+                printf ( "\033[4F\033[2K" );
+                for ( int i = 0; i < 3; ++ i ) {
+                    printf ( "\033[1F\033[2K" );
+                }
+                printf ( "%s\033[7E\0338", buffer );
+                break;
+            }
+            case __CONSISTENT_DATA_RESPONSE : {
+                printf ( "\033[2F\033[2K" );
+                printf ( "\033[1F\033[2K" );
+                printf ( "%s\033[3E\0338", buffer );
+                break;
+            }
+            case __QUICK_RESPONSE : {
+                printf ( "\033[1F\033[2K%s\033[1E\0338", buffer );
+                break;
+            }
+            default : {
+                break;
+            }
+        }
+        fflush ( stdout );
     }
 
     exit ( EXIT_FAILURE );

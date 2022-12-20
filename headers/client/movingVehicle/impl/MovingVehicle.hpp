@@ -63,7 +63,7 @@ auto MovingVehicle :: moveVehicle () -> void {
 
         if ( DEBUG_oldNode != pGraph->getStreet ( this->getStreetId() )->getEndNodes().first &&
                 DEBUG_oldNode != pGraph->getStreet ( this->getStreetId() )->getEndNodes().second ) {
-            perror ("Wrong turn made\n");
+            perror ( "Wrong turn made\n" );
 
             exit ( EXIT_FAILURE );
         }
@@ -71,7 +71,7 @@ auto MovingVehicle :: moveVehicle () -> void {
     } else {
 
         this->_distance_percent = this->_distance_percent + ( float ) (
-                    ( float ) ( this->getSpeed() ) * 0.01f /
+                    ( float ) ( this->getSpeed() ) * 0.1f /
                     ( float ) pGraph->getStreet ( this->getStreetId() )->getLength()
                 );
     }

@@ -2,25 +2,36 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <cstring>
-#include <fstream>
+#include <array>
+#include <mutex>
 
 void * threadMain ( void * param ) {
 
-    std :: ifstream fin;
-    fin.open ( "../resources/sport.txt" );
-    char s1 [ 128 ];
-    char s2 [ 128 ];
-    char s3 [ 128 ];
-    for ( int i = 0; i < 5; ++ i ) {
-        fin.getline ( s1, 128 );
-        if ( strlen ( s1 ) == 0 ) {
-            fin.seekg ( 0, std :: ios_base :: beg );
-            -- i;
-            continue;
+    std :: array < std :: string, 3 > a {
+        "abfasdfasdfasdfasdfasdfasdfasdfasdc",
+        "def",
+        "ghi"
+    };
+    for ( int i = 0; i < 10; ++ i ) {
+        printf ( "\0337" );
+        switch ( i % 3 ) {
+            case 0: {
+                printf ( "\033[4F%s\033[4E\0338", a [ i % 3].c_str());
+                fflush ( stdout );
+                fflush ( stdout );
+                break;
+            }
+            case 1 : {
+                printf ( "\033[3F%s\033[3E\0338", a [ i % 3].c_str());
+                fflush ( stdout );
+                break;
+            }
+            case 2 : {
+                printf ( "\033[2F%s\033[2E\0338", a [ i % 3].c_str());
+                fflush ( stdout );
+                break;
+            }
         }
-        fin.getline ( s2, 128 );
-        fin.getline ( s3, 128  );
-        std :: cout << s1 << " sursa: " << s2 << " link: " << s3 << '\n';
         sleep ( 1 );
     }
     pthread_cancel ( pthread_self() );
@@ -29,21 +40,16 @@ void * threadMain ( void * param ) {
 
 int main() {
 
-    std :: ifstream fin;
-    fin.open ( "../resources/sport.txt" );
-    char s1 [ 128 ];
-    char s2 [ 128 ];
-    char s3 [ 128 ];
-    for ( int i = 0; i < 5; ++ i ) {
-        fin.getline ( s1, 128 );
-        if ( strlen ( s1 ) == 0 ) {
-            fin.clear();
-            fin.seekg ( 0, std :: ios_base :: beg );
-            --i;
-            continue;
-        }
-        fin.getline ( s2, 128 );
-        fin.getline ( s3, 128  );
-        std :: cout << s1 << " sursa: " << s2 << " link: " << s3 << '\n';
+    printf ( "\n\n\n\n\n\n\n\n\n" );
+    pthread_t th1;
+    pthread_create ( &th1, nullptr, & threadMain, nullptr );
+    char buffer [ 128 ];
+    while ( true ) {
+        fgets ( buffer, 128, stdin );
+        buffer [ strlen ( buffer ) - 1 ] = 0;
+        printf ( "\033[2F\033[2K%s", buffer );
+        fflush ( stdout );
+        printf ( "\033[1E\033[2K" );
     }
+    pthread_join ( th1, nullptr );
 }

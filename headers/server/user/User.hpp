@@ -69,7 +69,10 @@ public:
     };
 
 private:
-    auto sendMessage ( std :: string const & message ) const -> void;
+    auto sendMessage (
+            ResponseIDs           responseType,
+            std :: string const & message
+    ) const -> void;
 
     auto receiveInitialData () -> bool;
 
@@ -77,6 +80,7 @@ public:
     auto handleRequest () -> void;
 
 private:
+
     auto handleSignal () -> void;
 
     auto handleEventUpdate () -> void;

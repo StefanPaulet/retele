@@ -13,11 +13,12 @@
 #include <arpa/inet.h>
 
 #include "concurrentDescriptor/AtomicSocket.hpp"
+#include "../common/thread/ThreadCommons.hpp"
 
 class Client {
 
 private:
-    static const std :: map < std :: string, sint16 > commandMap;
+    static const std :: map < std :: string, CommandIDs > commandMap;
 
     static std :: mutex conditionMutex;
 

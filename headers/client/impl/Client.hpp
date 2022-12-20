@@ -6,9 +6,9 @@
 #define CONCURRENT_SV_CLIENT_IMPL_HPP
 
 
-const std :: map < std :: string, sint16 > Client :: commandMap = {
-        { "signal",              __SIGNAL   },
-        { "get-gas-stations",    __GET_GS   },
+const std :: map < std :: string, CommandIDs > Client :: commandMap = {
+        { "signal",              __SIGNAL_REQUEST   },
+        { "get-gas-stations",    __GET_GAS_STATIONS   },
         { "enable-sport-news",   __ENABLE_SPORTS },
         { "disable-sport-news",  __DISABLE_SPORTS },
         { "get-weather-news",    __GET_WEATHER },
@@ -99,13 +99,15 @@ auto Client :: clientMain () -> void {
 
         buffer [ strlen ( buffer ) - 1 ] = 0;
 
+        printf ( "\033[1F\033[2K" );
+
         bool hasParams = split_param ( buffer, p_aux );
 
-        sint16 request_code = commandMap.find( buffer )->second;
+        CommandIDs request_code = commandMap.find( buffer )->second;
 
-        if ( request_code == __SIGNAL && ! hasParams ) {
+        if ( request_code == __SIGNAL_REQUEST && ! hasParams ) {
             request_code = __NO_PARAM_REQUEST;
-        } else if ( request_code != __SIGNAL && hasParams ) {
+        } else if ( request_code != __SIGNAL_REQUEST && hasParams ) {
             request_code = __BAD_REQUEST;
             p_aux = nullptr;
         }

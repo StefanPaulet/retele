@@ -16,7 +16,10 @@ int main () {
         exit ( EXIT_FAILURE );
     }
 
-    printf ( "Connected to server\n" );
+    printf ( "Connected to server" );
+    fflush ( stdout );
+    sleep ( 1 );
+    printf ( "\033[2K\n\n\n\n\n\n\n\n\n\n" );
 
     if ( ! client->initializeMovementControllingThread() ) {
         perror ( "Thread creation error" );
@@ -24,8 +27,6 @@ int main () {
     }
 
     Client :: waitPositionInitialization();
-
-    printf ( "Position has been sent to server\n" );
 
     if ( ! client->initializeConsoleOutputThread() ) {
         perror ( "Thread creation error" );
