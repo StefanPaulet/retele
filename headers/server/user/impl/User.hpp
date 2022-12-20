@@ -113,7 +113,6 @@ User :: CommonWeather :: CommonWeather() {
     this->commonChoice = randomGenerator.getRandomInRange ( ( uint8 ) this->pWeatherString->size() );
 
 }
-
 User :: CommonWeather :: ~CommonWeather () {
 
     for ( auto & e : * this->pWeatherString ) {
@@ -122,10 +121,7 @@ User :: CommonWeather :: ~CommonWeather () {
     this->pWeatherString.reset();
 
 }
-
 auto User :: pCommonWeather = new CommonWeather;
-
-
 
 
 auto User :: sendMessage ( std :: string const & message ) const -> void {
@@ -236,7 +232,18 @@ auto User :: handleRequest () -> void {
                 this->handleGetGasStations();
                 break;
             }
+            case __ENABLE_SPORTS : {
+                this->handleSetSportNews();
+                break;
+            }
+            case __DISABLE_SPORTS : {
+                this->handleUnsetSportNews();
+                break;
+            }
             case __TIMED_SPORTS_UPDATE : {
+                if ( this->_sport_news_enabled ) {
+                    this->handleGetSportNews();
+                }
                 break;
             }
             case __EVENT_MISSING : {
@@ -409,4 +416,49 @@ auto User :: handleGetGasStations () -> void {
     delete pResults;
 }
 
+
+auto User :: handleSetSportNews () -> void {
+
+    if ( this->_sport_news_enabled ) {
+        this->sendMessage ( "Sport news already enabled\n" );
+    } else {
+        this->_sport_news_enabled = true;
+        this->sendMessage ( "Sport news enabled\n" );
+    }
+}
+
+
+auto User :: handleUnsetSportNews () -> void {
+
+    if ( ! this->_sport_news_enabled ) {
+        this->sendMessage ( "Sport news already disabled\n" );
+    } else {
+        this->_sport_news_enabled = false;
+        this->sendMessage ( "Sport news disabled\n" );
+    }
+}
+
+
+auto User :: handleGetSportNews () -> void {
+
+    std :: ifstream fin;
+
+    std :: string filePath = __COMMON_LIBS_HPP + "../resources/sport.txt";
+    fin.open ( filePath.c_str() );
+
+    auto selectedNews = randomGenerator.getRandomInRange (( uint8 )  16 );
+    char s [ 3 ][ 256 ];
+
+    for ( int i = 0; i <= selectedNews; ++ i ) {
+        for ( auto & j : s) {
+            fin.getline ( j, 256 );
+        }
+    }
+
+    for ( auto & j : s) {
+        std :: string stringedBuffer ( j );
+        stringedBuffer += "\n";
+        this->sendMessage ( stringedBuffer );
+    }
+}
 #endif //CONCURRENT_SV_USER_IMPL_HPP

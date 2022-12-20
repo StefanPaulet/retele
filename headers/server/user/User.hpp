@@ -25,7 +25,6 @@ private:
 
     static std :: array < std :: string, 6 > const signalNamesArray;
 
-
     struct GasStationMap {
         std :: unique_ptr < std :: map < uint16, std :: pair < cds :: String const *, float > > > pMap = std :: make_unique < std :: map < uint16, std :: pair < cds :: String const *, float > > > ();
 
@@ -50,6 +49,8 @@ private:
     Vehicle _userPosition { 30, 0 };
 
     std :: pair < uint8, uint16 > _event_removal_pair { 0, 0 };
+
+    bool _sport_news_enabled { false };
 
     friend auto _queue_supervisor_main ( void * param ) -> void *;   /* NOLINT(bugprone-reserved-identifier) */
 
@@ -92,6 +93,13 @@ private:
     auto handleGetWeather () -> void;
 
     auto handleGetGasStations () -> void;
+
+    auto handleSetSportNews () -> void;
+
+    auto handleUnsetSportNews () -> void;
+
+    auto handleGetSportNews () -> void;
+
 };
 
 #include "../../common/vehicle/impl/Vehicle.hpp"        /* NOLINT(llvm-include-order) */

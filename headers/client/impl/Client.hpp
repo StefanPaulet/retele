@@ -95,7 +95,7 @@ auto Client :: clientMain () -> void {
 
     while ( true ) {
 
-        fgets ( buffer, __STANDARD_BUFFER_SIZE, stdin );
+
 
         buffer [ strlen ( buffer ) - 1 ] = 0;
 

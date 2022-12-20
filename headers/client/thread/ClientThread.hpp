@@ -41,7 +41,7 @@ auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserve
             { __TIMED_EVENTS_UPDATE, 1 },
             { __TIMED_SPEED_LIMIT_UPDATE, 5 },
             { __TIMED_EVENT_STILL_PRESENT, 3 },
-            { __TIMED_SPORTS_UPDATE, 60 }
+            { __TIMED_SPORTS_UPDATE, 5 }
     };
 
     auto clientFd = reinterpret_cast < AtomicSocket * > ( param );
