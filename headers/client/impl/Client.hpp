@@ -13,7 +13,8 @@ const std :: map < std :: string, CommandIDs > Client :: commandMap = {
         { "disable-sport-news",  __DISABLE_SPORTS },
         { "get-weather-news",    __GET_WEATHER },
         { "quit",                __EXIT },
-        { "remove",              __EVENT_MISSING }
+        { "remove",              __EVENT_MISSING },
+        { "clear",               __CLEAR_SCREEN }
 
 };
 

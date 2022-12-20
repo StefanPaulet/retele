@@ -197,6 +197,10 @@ auto User :: handleRequest () -> void {
         }
 
         switch ( request_nr ) {
+            case __CLEAR_SCREEN : {
+                this->sendMessage ( __CLEAR_RESPONSE, "Screen cleared" );
+                break;
+            }
             case __NO_PARAM_REQUEST : {
                 this->sendMessage ( __QUICK_RESPONSE, "Command must have parameters\n" );
                 break;

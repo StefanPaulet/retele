@@ -6,8 +6,8 @@
 #define CONCURRENT_SV_MOVING_VEHICLE_IMPL_HPP
 
 
-auto MovingVehicle :: pRandomNrGenerator = new std :: random_device;
-auto MovingVehicle :: pGraph = new Graph();
+std::random_device * MovingVehicle :: pRandomNrGenerator = new std :: random_device;
+Graph * MovingVehicle :: pGraph = new Graph();
 
 auto MovingVehicle :: getRandomInRange ( uint16 maxValue ) -> uint16 {
 

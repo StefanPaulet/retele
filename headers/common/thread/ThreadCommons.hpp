@@ -15,10 +15,11 @@ enum CommandIDs : sint16 {
     __BAD_REQUEST            = 0,          /* NOLINT(bugprone-reserved-identifier) */
     __NO_PARAM_REQUEST       = -1,         /* NOLINT(bugprone-reserved-identifier) */
     __SIGNAL_REQUEST         = 20,         /* NOLINT(bugprone-reserved-identifier) */
-    __GET_GAS_STATIONS        = 21,         /* NOLINT(bugprone-reserved-identifier) */
+    __GET_GAS_STATIONS       = 21,         /* NOLINT(bugprone-reserved-identifier) */
     __ENABLE_SPORTS          = 22,         /* NOLINT(bugprone-reserved-identifier) */
     __DISABLE_SPORTS         = 23,         /* NOLINT(bugprone-reserved-identifier) */
     __GET_WEATHER            = 24,         /* NOLINT(bugprone-reserved-identifier) */
+    __CLEAR_SCREEN           = 25,         /* NOLINT(bugprone-reserved-identifier) */
     __EXIT                   = 99,         /* NOLINT(bugprone-reserved-identifier) */
 
 
@@ -41,7 +42,8 @@ enum ResponseIDs : uint8 {
     __FEED_UPDATE_RESPONSE      = 2,       /* NOLINT(bugprone-reserved-identifier) */
     __CONSISTENT_DATA_RESPONSE  = 3,       /* NOLINT(bugprone-reserved-identifier) */
     __QUICK_RESPONSE            = 4,       /* NOLINT(bugprone-reserved-identifier) */
-    __ROAD_STATUS_RESPONSE      = 5        /* NOLINT(bugprone-reserved-identifier) */
+    __ROAD_STATUS_RESPONSE      = 5,       /* NOLINT(bugprone-reserved-identifier) */
+    __CLEAR_RESPONSE            = 6        /* NOLINT(bugprone-reserved-identifier) */
 };
 
 #endif //CONCURRENT_SV_THREAD_COMMONS_HPP

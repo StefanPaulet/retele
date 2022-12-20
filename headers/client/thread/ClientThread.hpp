@@ -58,6 +58,9 @@ auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-r
                 printf ( "%s\033[3E\0338", buffer );
                 break;
             }
+            case __CLEAR_RESPONSE : {
+                printf ( "\033[2J");
+            }
             case __QUICK_RESPONSE : {
                 printf ( "\033[1F\033[2K%s\033[1E\0338", buffer );
                 break;
@@ -77,7 +80,7 @@ auto _pinging_main ( void * param ) -> void * {       /* NOLINT(bugprone-reserve
 
     std :: pair < sint16 , uint8 > requests[] = {
             { __TIMED_EVENTS_UPDATE, 1 },
-            { __TIMED_SPEED_LIMIT_UPDATE, 5 },
+            { __TIMED_SPEED_LIMIT_UPDATE, 1 },
             { __TIMED_EVENT_STILL_PRESENT, 3 },
             { __TIMED_SPORTS_UPDATE, 5 }
     };
