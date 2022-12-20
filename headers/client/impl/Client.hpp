@@ -13,7 +13,7 @@ const std :: map < std :: string, sint16 > Client :: commandMap = {
         { "disable-sport-news",  __DISABLE_SPORTS },
         { "get-weather-news",    __GET_WEATHER },
         { "quit",                __EXIT },
-        { "n",                   __EVENT_MISSING }
+        { "remove",              __EVENT_MISSING }
 
 };
 
@@ -95,7 +95,7 @@ auto Client :: clientMain () -> void {
 
     while ( true ) {
 
-
+        fgets ( buffer, __STANDARD_BUFFER_SIZE, stdin );
 
         buffer [ strlen ( buffer ) - 1 ] = 0;
 
@@ -119,12 +119,15 @@ auto Client :: clientMain () -> void {
 
         if ( request_code == __EXIT ) {
             pthread_cancel ( this->_writer_thread );
+            pthread_cancel ( this->_pinging_thread );
+            pthread_cancel ( this->_movement_controlling_thread );
             break;
         }
     }
 
     pthread_join ( this->_writer_thread, nullptr );
     pthread_join ( this->_pinging_thread, nullptr );
+    pthread_join ( this->_movement_controlling_thread, nullptr );
 }
 
 #endif //CONCURRENT_SV_CLIENT_IMPL_HPP

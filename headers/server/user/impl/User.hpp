@@ -335,11 +335,11 @@ auto User :: handleEventRemoval () -> void {
     this->_event_removal_pair.second = this->_userPosition.getStreetId();
 
     if ( userStreet->isBlocked() ) {
-        this->sendMessage ( "Roadblock signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
+        this->sendMessage ( "Roadblock signaled on your street. Is it still there?[write \"remove\" to remove it]\n" );
         this->_event_removal_pair.first = 1;
     } else {
         if ( userStreet->isJammed() ) {
-            this->sendMessage ( "Traffic jam signaled on your street. Is it still there?[enter \"n\" to remove it]\n" );
+            this->sendMessage ( "Traffic jam signaled on your street. Is it still there?[write \"remove\" to remove it]\n" );
             this->_event_removal_pair.first = 2;
         }
     }
@@ -397,20 +397,20 @@ auto User :: handleGetGasStations () -> void {
     if ( pResults->empty() ) {
         this->sendMessage ( "Sorry, we couldn't find what you needed in your vicinity\n" );
     } else {
-        std :: string resultString { "We found what you need at:\n"};
+        std :: stringstream sstream;
+        sstream << "We found what you need at:\n";
         for ( auto & e : * pResults ) {
             auto firstStreet = e->getStreetList()->begin();
             auto secondStreet = firstStreet ++;
             if ( ( * firstStreet )->getName() == ( * secondStreet )->getName() ) {
                 ++ firstStreet;
             }
-            resultString +=
-                    "Gas station " + ( * pGasStationMap->pMap ) [ e->getId() ].first->toString() +
-                    " with gas price " + roundf ( ( * pGasStationMap->pMap ) [ e->getId() ].second * 100 ) / 100 +
-                    " at the intersection of streets " + ( * firstStreet )->getName() +
+            sstream << "Gas station " + ( * pGasStationMap->pMap ) [ e->getId() ].first->toString() + " with gas price ";
+            sstream << std :: fixed << std :: setprecision ( 2 ) << ( * pGasStationMap->pMap ) [ e->getId() ].second;
+            sstream << " at the intersection of streets " + ( * firstStreet )->getName() +
                     " and " + ( * secondStreet )->getName() + "\n";
         }
-        this->sendMessage ( resultString );
+        this->sendMessage ( sstream.str() );
     }
 
     delete pResults;

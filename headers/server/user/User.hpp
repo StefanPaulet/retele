@@ -7,6 +7,7 @@
 
 #include <AtomicQueue>
 #include <map>
+#include <iomanip>
 
 #include "../../common/graph/Graph.hpp"
 
