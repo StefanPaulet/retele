@@ -16,7 +16,7 @@ int main () {
         exit ( EXIT_FAILURE );
     }
 
-    printf ( "Connected to server" );
+    printf ( "Connecting... to server" );
     fflush ( stdout );
     sleep ( 1 );
     printf ( "\033[2K\n\n\n\n\n\n\n\n\n\n" );

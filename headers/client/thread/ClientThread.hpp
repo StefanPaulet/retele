@@ -18,17 +18,17 @@ auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-r
     while ( true ) {
 
         if ( 0 >= serverFd->read ( & responseType, sizeof ( responseType ) ) ) {
-            printf ( "1Server connection dropped\n" );
+            printf ( "Server connection dropped\n" );
             pthread_cancel ( pthread_self() );
             break;
         }
         if ( 0 >= serverFd->read ( & bufferSize, sizeof ( bufferSize ) ) ) {
-            printf ( "2Server connection dropped\n" );
+            printf ( "Server connection dropped\n" );
             pthread_cancel ( pthread_self() );
             break;
         }
         if ( 0 >= serverFd->read ( buffer, bufferSize )) {
-            printf ( "3Server connection dropped\n" );
+            printf ( "Server connection dropped\n" );
             pthread_cancel ( pthread_self() );
             break;
         }

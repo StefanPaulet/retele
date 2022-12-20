@@ -11,6 +11,7 @@
 #include <condition_variable>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 #include "concurrentDescriptor/AtomicSocket.hpp"
 #include "../common/thread/ThreadCommons.hpp"
