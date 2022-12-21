@@ -45,8 +45,20 @@ Graph :: Graph() {
         this->_pNode_list [ firstNode ]->add_incident_street ( this->_pEdge_list [ i ] );
         this->_pNode_list [ secondNode ]->add_incident_street ( this->_pEdge_list [ i ] );
 
-        i ++;
+        ++ i;
     }
+}
+
+
+Graph :: ~Graph () {
+    for ( auto i = 0; i < this->_node_count; ++ i ) {
+        delete this->_pNode_list [ i ];
+    }
+    delete this->_pNode_list;
+    for ( auto i = 0; i < this->_edge_count; ++ i ) {
+        delete this->_pEdge_list [ i ];
+    }
+    delete this->_pEdge_list;
 }
 
 

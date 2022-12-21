@@ -72,7 +72,7 @@ auto _console_output_main ( void * param ) -> void * {      /* NOLINT(bugprone-r
         fflush ( stdout );
     }
 
-    exit ( EXIT_FAILURE );
+    return nullptr;
 
 }
 

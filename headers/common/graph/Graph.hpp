@@ -25,7 +25,9 @@ private:
     Edge * * _pEdge_list;
 
 public:
-    Graph();
+    Graph ();
+
+    ~Graph ();
 
     auto constexpr getStreet ( int const & streetId ) -> Edge * ;
 

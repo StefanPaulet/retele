@@ -39,4 +39,6 @@ int main () {
     }
 
     client->clientMain();
+
+    delete client;
 }

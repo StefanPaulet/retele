@@ -79,7 +79,7 @@ auto Client :: initializePingingThreads () -> bool {
 
 auto Client :: clientMain () -> void {
 
-    char buffer[__STANDARD_BUFFER_SIZE];
+    char buffer[ __STANDARD_BUFFER_SIZE ];
     char * p_aux;
 
     auto split_param = [] ( char * initialBuffer, char * & parameters ) -> bool {
@@ -115,8 +115,7 @@ auto Client :: clientMain () -> void {
 
         if ( -1 == this->_server_fd.write( & request_code, sizeof ( request_code ), p_aux, __STANDARD_BUFFER_SIZE ) ) {
             if ( errno == EPIPE ) {
-                perror ( "Fatal error: Sending request to server problem" );
-                exit ( EXIT_FAILURE );
+                break;
             }
         }
 
